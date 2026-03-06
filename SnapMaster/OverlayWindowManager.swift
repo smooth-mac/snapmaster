@@ -95,9 +95,12 @@ final class OverlayWindowManager {
         window.alphaValue = 0
         window.orderFront(nil)
 
-        // Fade in on the next run-loop turn so the window has been placed first.
+        // Fade in to the user-configured opacity on the next run-loop turn
+        // so the window has been placed first. Reading AppSettings here ensures
+        // changes made in Preferences take effect immediately.
+        let targetOpacity = AppSettings.shared.overlayOpacity
         DispatchQueue.main.async { [weak window] in
-            window?.animator().alphaValue = 1
+            window?.animator().alphaValue = targetOpacity
         }
     }
 

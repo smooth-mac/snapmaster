@@ -80,17 +80,33 @@ final class EventMonitor {
         print("[EventMonitor] Stopped")
     }
 
+    // MARK: - Excluded-app guard
+
+    /// Returns `true` when the frontmost application's bundle ID is in the
+    /// user's exclusion list, meaning snapping should be suppressed.
+    ///
+    /// `NSWorkspace.shared.frontmostApplication` is safe to read from any
+    /// thread (it is an atomic property backed by the workspace server).
+    private func isDraggingExcludedApp() -> Bool {
+        guard let bundleID = NSWorkspace.shared.frontmostApplication?.bundleIdentifier else {
+            return false
+        }
+        return AppSettings.shared.excludedBundleIDs.contains(bundleID)
+    }
+
     // MARK: - Event handling
 
     private func handle(type: CGEventType, event: CGEvent) {
         switch type {
         case .leftMouseDown:
+            guard !isDraggingExcludedApp() else { return }
             isDragging = true
             currentZone = .none
             currentScreen = nil
 
         case .leftMouseDragged:
             guard isDragging else { return }
+            guard !isDraggingExcludedApp() else { return }
             let loc = event.location
             if let (zone, screen) = detector.detect(at: loc) {
                 if zone != currentZone {

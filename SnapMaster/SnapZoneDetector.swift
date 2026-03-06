@@ -2,15 +2,6 @@ import AppKit
 
 class SnapZoneDetector {
 
-    // MARK: - Configuration
-
-    /// Pixels from a screen edge required to trigger a snap zone.
-    var edgeThreshold: CGFloat = 24
-
-    /// Pixels from a screen corner (measured along each axis) required to
-    /// trigger one of the diagonal quarter zones.
-    var cornerThreshold: CGFloat = 120
-
     // MARK: - Detection
 
     /// Detects the snap zone for a point expressed in Core Graphics coordinates
@@ -23,12 +14,17 @@ class SnapZoneDetector {
 
         let sr = cgRect(from: screen)   // screen rect in CG coords
 
-        let nearLeft   = cgPoint.x - sr.minX <= edgeThreshold
-        let nearRight  = sr.maxX - cgPoint.x <= edgeThreshold
-        let nearTop    = cgPoint.y - sr.minY <= edgeThreshold      // CG: minY is the top
-        let nearBottom = sr.maxY - cgPoint.y <= edgeThreshold      // CG: maxY is the bottom
+        // Read live values from AppSettings so that changes in Preferences
+        // are reflected immediately without restarting the app.
+        let edge   = AppSettings.shared.edgeThreshold
+        let corner = AppSettings.shared.cornerThreshold
 
-        let inCornerV  = cgPoint.y - sr.minY <= cornerThreshold    // near top corner band (CG)
+        let nearLeft   = cgPoint.x - sr.minX <= edge
+        let nearRight  = sr.maxX - cgPoint.x <= edge
+        let nearTop    = cgPoint.y - sr.minY <= edge      // CG: minY is the top
+        let nearBottom = sr.maxY - cgPoint.y <= edge      // CG: maxY is the bottom
+
+        let inCornerV  = cgPoint.y - sr.minY <= corner    // near top corner band (CG)
 
         // --- Corner zones have priority over pure edge zones ---
 
@@ -42,7 +38,7 @@ class SnapZoneDetector {
             return (.topRight, screen)
         }
 
-        let inCornerVB = sr.maxY - cgPoint.y <= cornerThreshold    // near bottom corner band (CG)
+        let inCornerVB = sr.maxY - cgPoint.y <= corner    // near bottom corner band (CG)
 
         // Bottom-left corner
         if nearLeft && inCornerVB {

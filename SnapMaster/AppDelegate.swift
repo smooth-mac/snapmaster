@@ -1,4 +1,5 @@
 import AppKit
+import ServiceManagement
 
 @main
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -22,6 +23,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
+        // Align the stored launch-at-login preference with the actual
+        // SMAppService registration state. This handles edge cases where
+        // the user toggled the setting outside the app (e.g. System Settings).
+        AppSettings.shared.syncLaunchAtLoginState()
         setupComponents()
         checkAccessibility()
     }
@@ -52,6 +57,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         menuBarManager.onOpenShortcuts = { [weak self] in
             self?.showShortcutsWindow()
+        }
+        menuBarManager.onOpenPreferences = {
+            PreferencesWindowController.shared.showWindow(nil)
         }
 
         eventMonitor = EventMonitor()

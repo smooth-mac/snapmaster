@@ -1,4 +1,5 @@
 import AppKit
+import ServiceManagement
 
 /// Manages the NSStatusItem that lives in the macOS menu bar.
 ///
@@ -28,6 +29,9 @@ final class MenuBarManager {
     /// Called when the user clicks "Shortcuts…".
     var onOpenShortcuts: (() -> Void)?
 
+    /// Called when the user clicks "Preferences…".
+    var onOpenPreferences: (() -> Void)?
+
     // MARK: Private State
 
     private let statusItem: NSStatusItem
@@ -38,6 +42,8 @@ final class MenuBarManager {
         case enabledToggle      = 1
         case accessibilityOpen  = 2
         case shortcuts          = 3
+        case launchAtLogin      = 4
+        case preferences        = 5
     }
 
     // MARK: Init
@@ -52,14 +58,16 @@ final class MenuBarManager {
 
     // MARK: Public Interface
 
-    /// Rebuild the checkmark state on the "Enabled" menu item.
+    /// Rebuild the checkmark states on stateful menu items.
     /// Call this whenever external code mutates `isEnabled` directly
     /// (e.g. after an accessibility-permission change at launch).
     func updateMenu() {
-        guard
-            let item = menu.item(withTag: ItemTag.enabledToggle.rawValue)
-        else { return }
-        item.state = isEnabled ? .on : .off
+        if let item = menu.item(withTag: ItemTag.enabledToggle.rawValue) {
+            item.state = isEnabled ? .on : .off
+        }
+        if let item = menu.item(withTag: ItemTag.launchAtLogin.rawValue) {
+            item.state = AppSettings.shared.launchAtLogin ? .on : .off
+        }
     }
 
     // MARK: Private – Icon
@@ -106,7 +114,28 @@ final class MenuBarManager {
         enabledItem.state  = isEnabled ? .on : .off
         menu.addItem(enabledItem)
 
+        // ── Launch at Login ────────────────────────────────────────────────
+        let launchAtLoginItem = NSMenuItem(
+            title: "Launch at Login",
+            action: #selector(toggleLaunchAtLogin(_:)),
+            keyEquivalent: ""
+        )
+        launchAtLoginItem.target = self
+        launchAtLoginItem.tag    = ItemTag.launchAtLogin.rawValue
+        launchAtLoginItem.state  = AppSettings.shared.launchAtLogin ? .on : .off
+        menu.addItem(launchAtLoginItem)
+
         menu.addItem(.separator())
+
+        // ── Preferences ────────────────────────────────────────────────────
+        let preferencesItem = NSMenuItem(
+            title: "Preferences\u{2026}",
+            action: #selector(openPreferences(_:)),
+            keyEquivalent: ","
+        )
+        preferencesItem.target = self
+        preferencesItem.tag    = ItemTag.preferences.rawValue
+        menu.addItem(preferencesItem)
 
         // ── Shortcuts ──────────────────────────────────────────────────────
         let shortcutsItem = NSMenuItem(
@@ -149,6 +178,18 @@ final class MenuBarManager {
         // Flip the backing property; the didSet observer updates the UI and
         // fires the callback.
         isEnabled.toggle()
+    }
+
+    @objc private func toggleLaunchAtLogin(_ sender: NSMenuItem) {
+        // Flip the stored value; AppSettings.launchAtLogin.setter handles
+        // the actual SMAppService register/unregister call.
+        let newValue = !AppSettings.shared.launchAtLogin
+        AppSettings.shared.launchAtLogin = newValue
+        sender.state = newValue ? .on : .off
+    }
+
+    @objc private func openPreferences(_ sender: NSMenuItem) {
+        onOpenPreferences?()
     }
 
     @objc private func openShortcuts(_ sender: NSMenuItem) {
