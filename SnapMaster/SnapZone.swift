@@ -22,8 +22,15 @@ enum SnapZone: String, CaseIterable, Equatable, Codable {
 
     // MARK: - State
 
+    /// Whether this zone is currently eligible to receive snaps.
+    ///
+    /// `.none` is always inactive. All other zones are active unless the user
+    /// has explicitly disabled them via `AppSettings.shared.disabledZones`.
+    /// The value is computed live so that changes in Preferences take effect
+    /// without requiring any cache invalidation.
     var isActive: Bool {
-        return self != .none
+        guard self != .none else { return false }
+        return !AppSettings.shared.disabledZones.contains(self.rawValue)
     }
 
     // MARK: - Display Name

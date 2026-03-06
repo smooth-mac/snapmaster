@@ -27,6 +27,7 @@ final class AppSettings {
         static let overlayOpacity   = "snapmaster.overlayOpacity"
         static let excludedBundleIDs = "snapmaster.excludedBundleIDs"
         static let launchAtLogin    = "snapmaster.launchAtLogin"
+        static let disabledZones    = "snapmaster.disabledZones"
     }
 
     // MARK: - Default Values
@@ -100,6 +101,24 @@ final class AppSettings {
         }
     }
 
+    // MARK: - Disabled Zones
+
+    /// Raw values of `SnapZone` cases that have been disabled by the user.
+    ///
+    /// Stored as a `[String]` array in UserDefaults and exposed as `Set<String>`
+    /// for O(1) membership lookups. The `.none` zone is never stored here;
+    /// it is always inactive by convention.
+    /// Default: empty set (all zones active).
+    var disabledZones: Set<String> {
+        get {
+            let array = UserDefaults.standard.stringArray(forKey: Key.disabledZones) ?? []
+            return Set(array)
+        }
+        set {
+            UserDefaults.standard.set(Array(newValue), forKey: Key.disabledZones)
+        }
+    }
+
     // MARK: - Excluded Apps
 
     /// Bundle identifiers of applications for which snap should be suppressed.
@@ -141,6 +160,7 @@ final class AppSettings {
             Key.overlayOpacity:   Default.overlayOpacity,
             Key.excludedBundleIDs: [String](),
             Key.launchAtLogin:    false,
+            Key.disabledZones:    [String](),
         ])
     }
 
