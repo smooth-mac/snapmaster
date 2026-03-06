@@ -1,0 +1,214 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 1024 1024"
+  width="1024"
+  height="1024"
+  shape-rendering="geometricPrecision"
+>
+  <defs>
+    <!-- Deep Navy background gradient: #1A1F3C → #0D1024 -->
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#1A1F3C"/>
+      <stop offset="100%" stop-color="#0D1024"/>
+    </linearGradient>
+
+    <!-- Snap Blue glow for highlighted cell -->
+    <radialGradient id="snapBlueGlow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%"   stop-color="#7DD8FC" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#5AC8FA" stop-opacity="1"/>
+    </radialGradient>
+
+    <!-- Subtle inner fill for inactive cells -->
+    <linearGradient id="cellFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.10"/>
+    </linearGradient>
+
+    <!-- Glow filter for highlighted cell -->
+    <filter id="glowBlue" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Ambient Snap Blue glow — upper-right quadrant radial -->
+    <radialGradient id="ambientGlow" cx="75%" cy="30%" r="40%">
+      <stop offset="0%"   stop-color="#5AC8FA" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#5AC8FA" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Squircle clip path (continuous curvature, r ≈ 0.1765 × 1024 = 180.7 → 181) -->
+    <!-- Approximated with cubic bezier — matches macOS Big Sur icon mask precisely -->
+    <clipPath id="squircle">
+      <path d="
+        M 512,0
+        C 725,0 1024,299 1024,512
+        C 1024,725 725,1024 512,1024
+        C 299,1024 0,725 0,512
+        C 0,299 299,0 512,0
+        Z
+      "/>
+    </clipPath>
+
+    <!--
+      True macOS squircle: superellipse n=5 approximation via cubic bezier.
+      Reference: Apple icon grid — corner tangent at ~22.7% from edge.
+    -->
+    <clipPath id="squirclePrecise">
+      <path d="
+        M 512,0
+        C 664.6,0 756.2,0 829.7,42.3
+        C 903.2,84.6 939.4,160.8 957.7,253.1
+        C 976,345.4 976,401.9 976,512
+        C 976,622.1 976,678.6 957.7,770.9
+        C 939.4,863.2 903.2,939.4 829.7,981.7
+        C 756.2,1024 664.6,1024 512,1024
+        C 359.4,1024 267.8,1024 194.3,981.7
+        C 120.8,939.4 84.6,863.2 66.3,770.9
+        C 48,678.6 48,622.1 48,512
+        C 48,401.9 48,345.4 66.3,253.1
+        C 84.6,160.8 120.8,84.6 194.3,42.3
+        C 267.8,0 359.4,0 512,0
+        Z
+      "/>
+    </clipPath>
+  </defs>
+
+  <!-- ─────────────────────────────────────────
+       LAYER 0: Background (squircle-safe full fill)
+       macOS will apply its own squircle mask externally,
+       so we fill the full 1024×1024 rect.
+       ───────────────────────────────────────── -->
+  <rect
+    x="0" y="0" width="1024" height="1024"
+    fill="url(#bgGradient)"
+  />
+
+  <!-- ─────────────────────────────────────────
+       LAYER 1: Subtle background texture dots
+       Very low opacity grid of micro-dots for depth
+       ───────────────────────────────────────── -->
+  <g opacity="0.06">
+    <!-- Horizontal texture lines -->
+    <line x1="0" y1="256" x2="1024" y2="256" stroke="#5AC8FA" stroke-width="1"/>
+    <line x1="0" y1="512" x2="1024" y2="512" stroke="#5AC8FA" stroke-width="1"/>
+    <line x1="0" y1="768" x2="1024" y2="768" stroke="#5AC8FA" stroke-width="1"/>
+    <line x1="256" y1="0" x2="256" y2="1024" stroke="#5AC8FA" stroke-width="1"/>
+    <line x1="512" y1="0" x2="512" y2="1024" stroke="#5AC8FA" stroke-width="1"/>
+    <line x1="768" y1="0" x2="768" y2="1024" stroke="#5AC8FA" stroke-width="1"/>
+  </g>
+
+  <!-- ─────────────────────────────────────────
+       LAYER 2: Main snap zone grid
+       Layout: 3 columns × 2 rows
+       Canvas area: 160px margin on all sides → 704×704
+       Gap between cells: 14px
+       Col width: (704 - 14×2) / 3 = (704 - 28) / 3 = 225.3 → 225px
+       Row height: (704 - 14×1) / 2 = (704 - 14) / 2 = 345px
+       Origin: (160, 160)
+       ───────────────────────────────────────── -->
+
+  <!--
+    Grid math (all values px):
+    outer_x = 160, outer_y = 160
+    outer_w = 704, outer_h = 704
+    gap     = 14
+    cols    = 3, rows = 2
+    cell_w  = (704 - 14*2) / 3  = 225.33 ≈ 225
+    cell_h  = (704 - 14*1) / 2  = 345
+    adjust outer_w: 3*225 + 2*14 = 675+28 = 703 → shift origin to 160.5 ≈ 161
+    adjust outer_h: 2*345 + 1*14 = 690+14 = 704 → origin y=160
+
+    Cell positions (x, y):
+    Row 0:
+      Col 0: (161,        160)
+      Col 1: (161+225+14, 160) = (400, 160)
+      Col 2: (400+225+14, 160) = (639, 160)   ← HIGHLIGHTED
+    Row 1:
+      Col 0: (161,        160+345+14) = (161, 519)
+      Col 1: (400,        519)
+      Col 2: (639,        519)
+  -->
+
+  <!-- ROW 0 — Inactive cells -->
+  <!-- Cell (0,0) -->
+  <rect x="161" y="160" width="225" height="345" rx="10" ry="10"
+        fill="url(#cellFill)"
+        stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.15"/>
+
+  <!-- Cell (1,0) -->
+  <rect x="400" y="160" width="225" height="345" rx="10" ry="10"
+        fill="url(#cellFill)"
+        stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.15"/>
+
+  <!-- Cell (2,0) — HIGHLIGHTED: Snap Blue, glow effect -->
+  <!-- Glow layer behind -->
+  <rect x="639" y="160" width="225" height="345" rx="10" ry="10"
+        fill="#5AC8FA" opacity="0.25" filter="url(#glowBlue)"/>
+  <!-- Solid cell -->
+  <rect x="639" y="160" width="225" height="345" rx="10" ry="10"
+        fill="url(#snapBlueGlow)"
+        stroke="#5AC8FA" stroke-width="2" stroke-opacity="0.9"/>
+
+  <!-- ROW 1 — Inactive cells -->
+  <!-- Cell (0,1) -->
+  <rect x="161" y="519" width="225" height="345" rx="10" ry="10"
+        fill="url(#cellFill)"
+        stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.15"/>
+
+  <!-- Cell (1,1) -->
+  <rect x="400" y="519" width="225" height="345" rx="10" ry="10"
+        fill="url(#cellFill)"
+        stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.15"/>
+
+  <!-- Cell (2,1) -->
+  <rect x="639" y="519" width="225" height="345" rx="10" ry="10"
+        fill="url(#cellFill)"
+        stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.15"/>
+
+  <!-- ─────────────────────────────────────────
+       LAYER 3: Snap indicator on highlighted cell
+       Small snap-corner marks at each corner of the active cell
+       Color: white at full opacity — signals "docked"
+       ───────────────────────────────────────── -->
+
+  <!-- Corner marks: L-shaped bracket, 24px arm, 3px stroke -->
+  <!-- TL corner of highlighted cell (639, 160) -->
+  <path d="M 660,185 L 660,168 L 677,168" fill="none"
+        stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+  <!-- TR corner (639+225=864, 160) -->
+  <path d="M 843,168 L 860,168 L 860,185" fill="none"
+        stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+  <!-- BL corner (639, 160+345=505) -->
+  <path d="M 660,490 L 660,505 L 677,505" fill="none"
+        stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+  <!-- BR corner -->
+  <path d="M 843,505 L 860,505 L 860,490" fill="none"
+        stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+
+  <!-- ─────────────────────────────────────────
+       LAYER 4: Snap Blue ambient glow
+       Large soft radial behind the highlighted cell
+       Adds depth and energy to the dark background
+       ───────────────────────────────────────── -->
+  <rect x="0" y="0" width="1024" height="1024" fill="url(#ambientGlow)"/>
+
+  <!-- ─────────────────────────────────────────
+       LAYER 5: Separator lines between cells
+       Thin lines matching the grid skeleton
+       Uses Snap Blue at very low opacity
+       ───────────────────────────────────────── -->
+  <!-- Vertical separator 1 (between col 0 and col 1) -->
+  <line x1="393" y1="160" x2="393" y2="864"
+        stroke="#5AC8FA" stroke-width="1" stroke-opacity="0.12"/>
+  <!-- Vertical separator 2 (between col 1 and col 2) -->
+  <line x1="632" y1="160" x2="632" y2="864"
+        stroke="#5AC8FA" stroke-width="1" stroke-opacity="0.12"/>
+  <!-- Horizontal separator (between row 0 and row 1) -->
+  <line x1="161" y1="512" x2="864" y2="512"
+        stroke="#5AC8FA" stroke-width="1" stroke-opacity="0.12"/>
+
+</svg>

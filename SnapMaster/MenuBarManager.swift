@@ -121,7 +121,7 @@ final class MenuBarManager: NSObject {
     private func configureIcon() {
         guard let button = statusItem.button else { return }
 
-        let symbolName = "rectangle.split.2x2"
+        let symbolName = "square.split.2x2.fill"
         if let sfImage = NSImage(systemSymbolName: symbolName, accessibilityDescription: "SnapMaster") {
             sfImage.isTemplate = true
             button.image       = sfImage
