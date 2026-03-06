@@ -21,8 +21,8 @@ final class EventMonitor {
 
     weak var delegate: EventMonitorDelegate?
 
-    // Injected dependencies
-    var detector = SnapZoneDetector()
+    // Internal snap-zone detector — not exposed outside EventMonitor.
+    private var detector = SnapZoneDetector()
 
     // State
     private var isDragging = false

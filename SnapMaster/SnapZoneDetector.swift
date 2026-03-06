@@ -7,12 +7,18 @@ class SnapZoneDetector {
     /// Detects the snap zone for a point expressed in Core Graphics coordinates
     /// (top-left origin, Y increases downward).
     ///
-    /// Returns `nil` when the point does not fall on any known screen.
+    /// Returns `nil` only when `NSScreen.screens` is empty (no display attached).
     func detect(at cgPoint: CGPoint) -> (zone: SnapZone, screen: NSScreen)? {
-        // Find the NSScreen whose CG-coordinate rect contains the point.
-        guard let screen = screen(containing: cgPoint) else { return nil }
+        // Use nearestScreen so we always have a screen context, but only
+        // detect snap zones when the cursor is actually on a screen.
+        // Returning (.none, screen) for gap positions avoids false triggers
+        // when the cursor sits exactly on a clamped screen boundary.
+        guard let screen = nearestScreen(to: cgPoint) else { return nil }
 
         let sr = cgRect(from: screen)   // screen rect in CG coords
+
+        // Don't trigger snap zones when the cursor is in a gap between monitors.
+        guard sr.contains(cgPoint) else { return (.none, screen) }
 
         // Read live values from AppSettings so that changes in Preferences
         // are reflected immediately without restarting the app.
@@ -109,10 +115,19 @@ class SnapZoneDetector {
     /// Converts an `NSScreen.frame` (AppKit, bottom-left origin) to a `CGRect`
     /// in Core Graphics coordinates (top-left origin, Y increases downward).
     ///
-    /// The primary screen's height is used as the total display height so that
-    /// every screen can be mapped into a single CG coordinate space.
+    /// macOS maps all screens into a single CG coordinate space using the
+    /// primary screen's total height as the reference. The primary screen is
+    /// always `NSScreen.screens[0]`; every other screen is offset relative to it.
+    ///
+    /// Returns `nil` when no screens are available (headless / no display).
     private func cgRect(from nsScreen: NSScreen) -> CGRect {
-        let primaryHeight = NSScreen.screens.first!.frame.height
+        guard let primaryHeight = NSScreen.screens.first?.frame.height else {
+            // Fallback: treat the screen's own frame as if it were the primary.
+            // This branch is reached only in edge cases (e.g. display hot-unplug
+            // occurring between the caller obtaining nsScreen and this call).
+            let f = nsScreen.frame
+            return CGRect(x: f.origin.x, y: 0, width: f.width, height: f.height)
+        }
         let nsFrame = nsScreen.frame
         return CGRect(
             x: nsFrame.origin.x,
@@ -122,11 +137,38 @@ class SnapZoneDetector {
         )
     }
 
-    /// Returns the `NSScreen` whose CG-coordinate frame contains `cgPoint`,
-    /// or `nil` if no screen contains the point.
-    private func screen(containing cgPoint: CGPoint) -> NSScreen? {
-        return NSScreen.screens.first { screen in
-            cgRect(from: screen).contains(cgPoint)
+    /// Returns the `NSScreen` whose CG-coordinate frame contains `cgPoint`.
+    ///
+    /// If no screen directly contains the point (e.g. the cursor is in a gap
+    /// between two monitors), returns the screen whose frame is closest to the
+    /// point measured by minimum edge distance. This prevents snap detection
+    /// from dropping out when the cursor moves quickly across a monitor boundary.
+    private func nearestScreen(to cgPoint: CGPoint) -> NSScreen? {
+        let screens = NSScreen.screens
+        guard !screens.isEmpty else { return nil }
+
+        // Fast path: the point is inside one of the screen rects.
+        if let exact = screens.first(where: { cgRect(from: $0).contains(cgPoint) }) {
+            return exact
         }
+
+        // Slow path: find the screen with the smallest squared distance from
+        // cgPoint to the nearest point on its CG-coordinate rect.
+        return screens.min { a, b in
+            cgRect(from: a).squaredDistance(to: cgPoint) <
+            cgRect(from: b).squaredDistance(to: cgPoint)
+        }
+    }
+}
+
+// MARK: - CGRect nearest-point helper
+
+private extension CGRect {
+    /// Returns the squared Euclidean distance from `point` to the nearest point
+    /// on (or inside) this rect.  Zero when `point` is already inside.
+    func squaredDistance(to point: CGPoint) -> CGFloat {
+        let dx = max(minX - point.x, 0, point.x - maxX)
+        let dy = max(minY - point.y, 0, point.y - maxY)
+        return dx * dx + dy * dy
     }
 }

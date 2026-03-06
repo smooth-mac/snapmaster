@@ -73,6 +73,10 @@ private final class PreferencesViewController: NSViewController {
     /// Mutable copy of the exclusion list kept in sync with AppSettings.
     private var excludedBundleIDs: [String] = AppSettings.shared.excludedBundleIDs
 
+    /// Cache of bundleID → app name from running applications.
+    /// Rebuilt once per reloadData() call to avoid O(n) NSWorkspace lookups per cell.
+    private var runningAppNames: [String: String] = [:]
+
     // MARK: - Cell identifier
 
     private static let bundleCellID = NSUserInterfaceItemIdentifier("BundleIDCell")
@@ -92,6 +96,7 @@ private final class PreferencesViewController: NSViewController {
     override func viewWillAppear() {
         super.viewWillAppear()
         excludedBundleIDs = AppSettings.shared.excludedBundleIDs
+        refreshRunningAppNames()
         tableView.reloadData()
     }
 
@@ -353,19 +358,51 @@ private final class PreferencesViewController: NSViewController {
 
     // MARK: - Excluded Apps Actions
 
-    /// Show a menu of all currently running applications and let the user pick one.
+    /// Shows a menu with two options:
+    ///   - "Enter Bundle ID..." — opens a text-input sheet
+    ///   - "Running Apps..." — submenu listing currently active regular apps
     @objc private func addExcludedApp(_ sender: NSButton) {
+        let menu = NSMenu()
+
+        // Option 1: manual bundle ID entry
+        let enterItem = NSMenuItem(
+            title: "Enter Bundle ID...",
+            action: #selector(enterBundleIDManually(_:)),
+            keyEquivalent: ""
+        )
+        enterItem.target = self
+        menu.addItem(enterItem)
+
+        menu.addItem(.separator())
+
+        // Option 2: running apps submenu
+        let runningSubmenuItem = NSMenuItem(title: "Running Apps...", action: nil, keyEquivalent: "")
+        runningSubmenuItem.submenu = buildRunningAppsSubmenu()
+        menu.addItem(runningSubmenuItem)
+
+        let buttonOrigin = sender.convert(sender.bounds.origin, to: nil)
+        let screenPoint  = sender.window?.convertPoint(toScreen: buttonOrigin) ?? .zero
+        menu.popUp(positioning: nil, at: screenPoint, in: nil)
+    }
+
+    /// Builds the submenu that lists all currently running regular applications
+    /// whose bundle IDs are not already in the exclusion list.
+    private func buildRunningAppsSubmenu() -> NSMenu {
+        let submenu = NSMenu()
         let runningApps = NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
             .sorted { ($0.localizedName ?? "") < ($1.localizedName ?? "") }
 
-        let menu = NSMenu()
         for app in runningApps {
             guard let bundleID = app.bundleIdentifier,
                   !excludedBundleIDs.contains(bundleID) else { continue }
 
             let title = app.localizedName ?? bundleID
-            let item = NSMenuItem(title: title, action: #selector(didSelectApp(_:)), keyEquivalent: "")
+            let item = NSMenuItem(
+                title: title,
+                action: #selector(didSelectApp(_:)),
+                keyEquivalent: ""
+            )
             item.target = self
             item.representedObject = bundleID
 
@@ -378,24 +415,92 @@ private final class PreferencesViewController: NSViewController {
                 item.image = sized
             }
 
-            menu.addItem(item)
+            submenu.addItem(item)
         }
 
-        if menu.items.isEmpty {
+        if submenu.items.isEmpty {
             let empty = NSMenuItem(title: "No running apps to add", action: nil, keyEquivalent: "")
             empty.isEnabled = false
-            menu.addItem(empty)
+            submenu.addItem(empty)
         }
 
-        let buttonOrigin = sender.convert(sender.bounds.origin, to: nil)
-        let screenPoint  = sender.window?.convertPoint(toScreen: buttonOrigin) ?? .zero
-        menu.popUp(positioning: nil, at: screenPoint, in: nil)
+        return submenu
+    }
+
+    /// Presents an `NSAlert` with a text field so the user can type a bundle ID
+    /// directly.  The input is validated before being added to the exclusion list.
+    @objc private func enterBundleIDManually(_ sender: Any?) {
+        let alert = NSAlert()
+        alert.messageText = "Add Bundle ID"
+        alert.informativeText = "Enter the bundle identifier of the app to exclude (e.g. com.company.AppName)."
+        alert.addButton(withTitle: "Add")
+        alert.addButton(withTitle: "Cancel")
+        alert.alertStyle = .informational
+
+        let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
+        textField.placeholderString = "com.example.MyApp"
+        alert.accessoryView = textField
+
+        // Present the sheet attached to the preferences window if possible;
+        // otherwise fall back to a modal dialog.
+        if let window = view.window {
+            alert.beginSheetModal(for: window) { [weak self] response in
+                guard response == .alertFirstButtonReturn else { return }
+                self?.commitBundleIDEntry(from: textField)
+            }
+        } else {
+            let response = alert.runModal()
+            if response == .alertFirstButtonReturn {
+                commitBundleIDEntry(from: textField)
+            }
+        }
+    }
+
+    /// Validates and persists the bundle ID entered in `textField`.
+    ///
+    /// Rules:
+    ///   - Must not be empty after trimming whitespace
+    ///   - Must contain at least one dot (reverse-domain format check)
+    ///   - Must not already be in the exclusion list
+    private func commitBundleIDEntry(from textField: NSTextField) {
+        let raw = textField.stringValue.trimmingCharacters(in: .whitespaces)
+
+        let errorMessage: String?
+        if raw.isEmpty {
+            errorMessage = "Bundle ID cannot be empty."
+        } else if !raw.contains(".") {
+            errorMessage = ""\(raw)" doesn't look like a bundle identifier.\nUse reverse-domain format, e.g. com.company.AppName."
+        } else if excludedBundleIDs.contains(raw) {
+            errorMessage = ""\(raw)" is already in the exclusion list."
+        } else {
+            errorMessage = nil
+        }
+
+        if let message = errorMessage {
+            let err = NSAlert()
+            err.messageText = "Invalid Bundle ID"
+            err.informativeText = message
+            err.alertStyle = .warning
+            err.addButton(withTitle: "OK")
+            if let window = view.window {
+                err.beginSheetModal(for: window)
+            } else {
+                err.runModal()
+            }
+            return
+        }
+
+        excludedBundleIDs.append(raw)
+        AppSettings.shared.excludedBundleIDs = excludedBundleIDs
+        refreshRunningAppNames()
+        tableView.reloadData()
     }
 
     @objc private func didSelectApp(_ sender: NSMenuItem) {
         guard let bundleID = sender.representedObject as? String else { return }
         excludedBundleIDs.append(bundleID)
         AppSettings.shared.excludedBundleIDs = excludedBundleIDs
+        refreshRunningAppNames()
         tableView.reloadData()
     }
 
@@ -404,7 +509,27 @@ private final class PreferencesViewController: NSViewController {
         guard selectedRow >= 0, selectedRow < excludedBundleIDs.count else { return }
         excludedBundleIDs.remove(at: selectedRow)
         AppSettings.shared.excludedBundleIDs = excludedBundleIDs
+        refreshRunningAppNames()
         tableView.reloadData()
+    }
+
+    // MARK: - Display name helpers
+
+    /// Rebuilds `runningAppNames` from the current running applications.
+    /// Call this once before `tableView.reloadData()`.
+    private func refreshRunningAppNames() {
+        runningAppNames = NSWorkspace.shared.runningApplications
+            .reduce(into: [:]) { dict, app in
+                if let id = app.bundleIdentifier, let name = app.localizedName {
+                    dict[id] = name
+                }
+            }
+    }
+
+    /// Returns a display string for a bundle ID using the cached app name map.
+    private func displayName(for bundleID: String) -> String {
+        guard let name = runningAppNames[bundleID] else { return bundleID }
+        return "\(name) (\(bundleID))"
     }
 }
 
@@ -444,7 +569,7 @@ extension PreferencesViewController: NSTableViewDelegate {
             cell = view
         }
 
-        cell?.textField?.stringValue = excludedBundleIDs[row]
+        cell?.textField?.stringValue = displayName(for: excludedBundleIDs[row])
         return cell
     }
 }
