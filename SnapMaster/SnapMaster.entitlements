@@ -4,5 +4,7 @@
 <dict>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<key>com.apple.security.temporary-exception.accessibility</key>
+	<true/>
 </dict>
 </plist>

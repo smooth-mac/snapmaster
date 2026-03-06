@@ -1,5 +1,4 @@
 import AppKit
-import CoreGraphics
 
 // MARK: - Delegate
 
@@ -11,12 +10,18 @@ protocol EventMonitorDelegate: AnyObject {
 
 // MARK: - EventMonitor
 
-/// Listens to global mouse events via CGEventTap and drives the snap workflow.
+/// Listens to global mouse events via NSEvent global monitors and drives the snap workflow.
+///
+/// Uses `NSEvent.addGlobalMonitorForEvents(matching:handler:)` instead of CGEventTap,
+/// which is compatible with the Mac App Store sandbox policy.
 ///
 /// Flow:
 ///   leftMouseDown  → record drag start
 ///   leftMouseDragged → detect zone, notify delegate to show preview
 ///   leftMouseUp    → if zone active, apply snap; else cancel
+///
+/// NSEvent global monitor callbacks are delivered on the main thread, so delegate
+/// calls are made directly without `DispatchQueue.main.async` wrapping.
 final class EventMonitor {
 
     weak var delegate: EventMonitorDelegate?
@@ -29,54 +34,33 @@ final class EventMonitor {
     private var currentZone: SnapZone = .none
     private var currentScreen: NSScreen?
 
-    // CGEventTap
-    private var eventTap: CFMachPort?
-    private var runLoopSource: CFRunLoopSource?
+    // NSEvent global monitor tokens
+    private var mouseDownMonitor: Any?
+    private var mouseDragMonitor: Any?
+    private var mouseUpMonitor:   Any?
 
     // MARK: - Lifecycle
 
     func start() {
-        let mask: CGEventMask =
-            (1 << CGEventType.leftMouseDown.rawValue)    |
-            (1 << CGEventType.leftMouseDragged.rawValue) |
-            (1 << CGEventType.leftMouseUp.rawValue)
-
-        let selfPtr = Unmanaged.passUnretained(self).toOpaque()
-
-        eventTap = CGEvent.tapCreate(
-            tap: .cgSessionEventTap,
-            place: .headInsertEventTap,
-            options: .defaultTap,
-            eventsOfInterest: mask,
-            callback: { proxy, type, event, refcon -> Unmanaged<CGEvent>? in
-                guard let refcon else { return Unmanaged.passUnretained(event) }
-                let monitor = Unmanaged<EventMonitor>.fromOpaque(refcon).takeUnretainedValue()
-                monitor.handle(type: type, event: event)
-                return Unmanaged.passUnretained(event)
-            },
-            userInfo: selfPtr
-        )
-
-        guard let tap = eventTap else {
-            print("[EventMonitor] Failed to create event tap — check Accessibility permission")
-            return
+        mouseDownMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDown) { [weak self] event in
+            self?.handleMouseDown(event)
         }
-
-        runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)
-        CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
-        CGEvent.tapEnable(tap: tap, enable: true)
-        print("[EventMonitor] Started")
+        mouseDragMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDragged) { [weak self] event in
+            self?.handleMouseDragged(event)
+        }
+        mouseUpMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { [weak self] event in
+            self?.handleMouseUp(event)
+        }
+        print("[EventMonitor] Started (NSEvent global monitors)")
     }
 
     func stop() {
-        if let tap = eventTap {
-            CGEvent.tapEnable(tap: tap, enable: false)
-        }
-        if let source = runLoopSource {
-            CFRunLoopRemoveSource(CFRunLoopGetCurrent(), source, .commonModes)
-        }
-        eventTap = nil
-        runLoopSource = nil
+        [mouseDownMonitor, mouseDragMonitor, mouseUpMonitor]
+            .compactMap { $0 }
+            .forEach { NSEvent.removeMonitor($0) }
+        mouseDownMonitor = nil
+        mouseDragMonitor = nil
+        mouseUpMonitor   = nil
         print("[EventMonitor] Stopped")
     }
 
@@ -85,8 +69,8 @@ final class EventMonitor {
     /// Returns `true` when the frontmost application's bundle ID is in the
     /// user's exclusion list, meaning snapping should be suppressed.
     ///
-    /// `NSWorkspace.shared.frontmostApplication` is safe to read from any
-    /// thread (it is an atomic property backed by the workspace server).
+    /// `NSWorkspace.shared.frontmostApplication` is safe to read from the
+    /// main thread (all NSEvent global monitor callbacks arrive on main).
     private func isDraggingExcludedApp() -> Bool {
         guard let bundleID = NSWorkspace.shared.frontmostApplication?.bundleIdentifier else {
             return false
@@ -94,58 +78,59 @@ final class EventMonitor {
         return AppSettings.shared.excludedBundleIDs.contains(bundleID)
     }
 
-    // MARK: - Event handling
+    // MARK: - Coordinate conversion
 
-    private func handle(type: CGEventType, event: CGEvent) {
-        switch type {
-        case .leftMouseDown:
-            guard !isDraggingExcludedApp() else { return }
-            isDragging = true
+    /// Converts an AppKit NSPoint (bottom-left origin, Y up) to a CGPoint
+    /// (top-left origin, Y down) suitable for `SnapZoneDetector.detect(at:)`.
+    ///
+    /// Uses `NSScreen.screens.first?.frame.height` (the primary display height)
+    /// as the reference, which matches the CG global coordinate space.
+    private func cgPoint(from nsPoint: NSPoint) -> CGPoint {
+        let screenHeight = NSScreen.screens.first?.frame.height ?? 0
+        return CGPoint(x: nsPoint.x, y: screenHeight - nsPoint.y)
+    }
+
+    // MARK: - Mouse event handlers
+
+    private func handleMouseDown(_ event: NSEvent) {
+        guard !isDraggingExcludedApp() else { return }
+        isDragging = true
+        currentZone = .none
+        currentScreen = nil
+    }
+
+    private func handleMouseDragged(_ event: NSEvent) {
+        guard isDragging else { return }
+        guard !isDraggingExcludedApp() else { return }
+
+        let loc = cgPoint(from: NSEvent.mouseLocation)
+
+        if let (zone, screen) = detector.detect(at: loc) {
+            if zone != currentZone {
+                currentZone = zone
+                currentScreen = screen
+                delegate?.eventMonitor(self, didDetectZone: zone, on: screen)
+            }
+        } else if currentZone != .none {
             currentZone = .none
             currentScreen = nil
+            delegate?.eventMonitorDidCancelSnap(self)
+        }
+    }
 
-        case .leftMouseDragged:
-            guard isDragging else { return }
-            guard !isDraggingExcludedApp() else { return }
-            let loc = event.location
-            if let (zone, screen) = detector.detect(at: loc) {
-                if zone != currentZone {
-                    currentZone = zone
-                    currentScreen = screen
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self else { return }
-                        self.delegate?.eventMonitor(self, didDetectZone: zone, on: screen)
-                    }
-                }
-            } else if currentZone != .none {
-                currentZone = .none
-                currentScreen = nil
-                DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
-                    self.delegate?.eventMonitorDidCancelSnap(self)
-                }
-            }
+    private func handleMouseUp(_ event: NSEvent) {
+        guard isDragging else { return }
+        isDragging = false
 
-        case .leftMouseUp:
-            guard isDragging else { return }
-            isDragging = false
+        let zone = currentZone
+        let screen = currentScreen
+        currentZone = .none
+        currentScreen = nil
 
-            let zone = currentZone
-            let screen = currentScreen
-            currentZone = .none
-            currentScreen = nil
-
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                if zone.isActive, let screen {
-                    self.delegate?.eventMonitor(self, didSnapTo: zone, on: screen)
-                } else {
-                    self.delegate?.eventMonitorDidCancelSnap(self)
-                }
-            }
-
-        default:
-            break
+        if zone.isActive, let screen {
+            delegate?.eventMonitor(self, didSnapTo: zone, on: screen)
+        } else {
+            delegate?.eventMonitorDidCancelSnap(self)
         }
     }
 }
