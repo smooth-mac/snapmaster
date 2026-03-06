@@ -1,0 +1,43 @@
+name: SnapMaster
+options:
+  bundleIdPrefix: com.yourname
+  deploymentTarget:
+    macOS: "13.0"
+  defaultConfig: Debug
+
+settings:
+  SWIFT_VERSION: "5.9"
+  MACOSX_DEPLOYMENT_TARGET: "13.0"
+  PRODUCT_BUNDLE_IDENTIFIER: com.yourname.SnapMaster
+  MARKETING_VERSION: "1.0.0"
+  CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  SnapMaster:
+    type: application
+    platform: macOS
+    sources:
+      - path: SnapMaster
+        excludes:
+          - "**/*.entitlements"
+    info:
+      path: SnapMaster/Info.plist
+      properties:
+        LSUIElement: true                          # hide from Dock — menu bar only
+        LSMinimumSystemVersion: "13.0"
+        NSPrincipalClass: NSApplication
+        CFBundleDisplayName: SnapMaster
+        NSAppleEventsUsageDescription: "SnapMaster needs Accessibility access to detect window drags and resize windows."
+    entitlements:
+      path: SnapMaster/SnapMaster.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+    dependencies:
+      - sdk: Carbon.framework
+    settings:
+      CODE_SIGN_STYLE: Automatic
+      # Disable sandbox — required for CGEventTap + AXUIElement
+      ENABLE_APP_SANDBOX: YES
+      # Hardened runtime for notarization
+      ENABLE_HARDENED_RUNTIME: YES
+      INFOPLIST_FILE: SnapMaster/Info.plist
