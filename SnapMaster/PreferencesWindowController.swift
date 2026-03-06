@@ -469,9 +469,9 @@ private final class PreferencesViewController: NSViewController {
         if raw.isEmpty {
             errorMessage = "Bundle ID cannot be empty."
         } else if !raw.contains(".") {
-            errorMessage = ""\(raw)" doesn't look like a bundle identifier.\nUse reverse-domain format, e.g. com.company.AppName."
+            errorMessage = "\"\(raw)\" doesn't look like a bundle identifier.\nUse reverse-domain format, e.g. com.company.AppName."
         } else if excludedBundleIDs.contains(raw) {
-            errorMessage = ""\(raw)" is already in the exclusion list."
+            errorMessage = "\"\(raw)\" is already in the exclusion list."
         } else {
             errorMessage = nil
         }
