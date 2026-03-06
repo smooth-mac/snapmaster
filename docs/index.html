@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SnapMaster — macOS 전용 윈도우 스냅 유틸리티. 11개 스냅존, 단축키 지원, 메뉴바 상주. 무료." />
+  <title>SnapMaster — Snap smarter. Free forever.</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary:   #0D0D12;
+      --bg-secondary: #12121A;
+      --snap-blue:    #5AC8FA;
+      --snap-purple:  #BF5AF2;
+      --text-primary: #F2F2F7;
+      --text-secondary: #8E8E93;
+      --border:       rgba(255,255,255,0.08);
+      --card-bg:      rgba(255,255,255,0.04);
+      --font:         system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Utility ──────────────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .snap-blue  { color: var(--snap-blue); }
+    .snap-purple { color: var(--snap-purple); }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--snap-blue);
+      color: #000;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 12px 26px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      background: #7ad4fb;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(90,200,250,0.30);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── [1] Nav ──────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(13,13,18,0.72);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo .logo-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--snap-blue);
+      border-radius: 7px;
+      color: #000;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links .btn-primary {
+      padding: 8px 18px;
+      font-size: 0.85rem;
+    }
+
+    /* ── [2] Hero ─────────────────────────────────────────────── */
+    #hero {
+      background: var(--bg-primary);
+      padding: 96px 0 80px;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(90,200,250,0.12);
+      border: 1px solid rgba(90,200,250,0.28);
+      color: var(--snap-blue);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 22px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .hero-headline-ko {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+    }
+    .hero-headline-en {
+      font-size: clamp(1rem, 1.8vw, 1.25rem);
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 36px;
+    }
+    .hero-pill {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+    .hero-cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .hero-micro {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* Mock Window */
+    .mock-screen {
+      background: #1A1A2E;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 0;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 32px 80px rgba(0,0,0,0.7),
+        0 0 60px rgba(90,200,250,0.06);
+      aspect-ratio: 16/10;
+      position: relative;
+    }
+    .mock-titlebar {
+      height: 32px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 7px;
+    }
+    .tl { width: 12px; height: 12px; border-radius: 50%; }
+    .tl-red    { background: #FF5F56; }
+    .tl-yellow { background: #FFBD2E; }
+    .tl-green  { background: #27C93F; }
+    .mock-desktop {
+      position: absolute;
+      top: 32px; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, #0D0D1E 0%, #131325 100%);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 6px;
+    }
+    .snap-win {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 7px;
+      overflow: hidden;
+      position: relative;
+    }
+    .snap-win-bar {
+      height: 20px;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      padding: 0 7px;
+      gap: 4px;
+    }
+    .snap-win-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+    .snap-win-body {
+      padding: 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .snap-win-line {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.1);
+    }
+    .snap-win-line.w80 { width: 80%; }
+    .snap-win-line.w60 { width: 60%; }
+    .snap-win-line.w40 { width: 40%; }
+
+    /* The "snapping preview" window */
+    .snap-win-preview {
+      grid-column: 2;
+      grid-row: 1 / 3;
+      border: 1.5px solid rgba(90,200,250,0.6);
+    }
+    .snap-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(90,200,250,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .snap-overlay-label {
+      font-size: 0.65rem;
+      color: var(--snap-blue);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(90,200,250,0.15);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(90,200,250,0.3);
+    }
+
+    /* ── [3] Features ─────────────────────────────────────────── */
+    #features {
+      background: var(--bg-secondary);
+      padding: 100px 0;
+    }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--snap-blue);
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+    }
+    .section-sub {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 540px;
+      margin-bottom: 56px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    }
+    .feature-card:hover {
+      border-color: var(--snap-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(90,200,250,0.08);
+    }
+    .feature-icon {
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+    .feature-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── [4] Snap Zones ───────────────────────────────────────── */
+    #snapzones {
+      background: var(--bg-primary);
+      padding: 100px 0;
+    }
+    .snapzone-diagram {
+      margin: 0 auto;
+      max-width: 680px;
+    }
+    .sz-screen {
+      background: #13131F;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    }
+    .sz-titlebar {
+      height: 28px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      gap: 6px;
+    }
+    .sz-tl { width: 10px; height: 10px; border-radius: 50%; }
+    .sz-tl-r { background: #FF5F56; }
+    .sz-tl-y { background: #FFBD2E; }
+    .sz-tl-g { background: #27C93F; }
+
+    .sz-desktop {
+      aspect-ratio: 16/10;
+      position: relative;
+      background: #0D0D18;
+      padding: 8px;
+    }
+
+    /* Zone grid layout */
+    .sz-zones {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 4px;
+    }
+
+    .sz-zone {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 5px;
+      background: rgba(255,255,255,0.03);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s, border-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0;
+    }
+    .sz-zone:hover {
+      background: rgba(90,200,250,0.18);
+      border-color: rgba(90,200,250,0.55);
+    }
+    .sz-zone:hover::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13,13,18,0.95);
+      border: 1px solid var(--snap-blue);
+      color: var(--snap-blue);
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 6px;
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Special span zones */
+    .sz-left-half    { grid-column: 1; grid-row: 1 / 4; }
+    .sz-right-half   { grid-column: 3; grid-row: 1 / 4; }
+    .sz-top-half     { grid-column: 1 / 4; grid-row: 1; }
+    .sz-bottom-half  { grid-column: 1 / 4; grid-row: 3; }
+    .sz-center       { grid-column: 2; grid-row: 2; }
+    .sz-tl-corner    { grid-column: 1; grid-row: 1; }
+    .sz-tr-corner    { grid-column: 3; grid-row: 1; }
+    .sz-bl-corner    { grid-column: 1; grid-row: 3; }
+    .sz-br-corner    { grid-column: 3; grid-row: 3; }
+    .sz-left-third   { grid-column: 1; grid-row: 1 / 4; }
+    .sz-middle-third { grid-column: 2; grid-row: 1 / 4; }
+    .sz-right-third  { grid-column: 3; grid-row: 1 / 4; }
+
+    /* Diagram selector tabs */
+    .sz-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+      justify-content: center;
+    }
+    .sz-tab {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sz-tab:hover, .sz-tab.active {
+      border-color: var(--snap-blue);
+      color: var(--snap-blue);
+      background: rgba(90,200,250,0.08);
+    }
+    .sz-hint {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-top: 16px;
+    }
+
+    /* Zone groups for JS switching */
+    .sz-group { display: none; }
+    .sz-group.active { display: contents; }
+
+    /* ── [5] Comparison ───────────────────────────────────────── */
+    #compare {
+      background: var(--bg-secondary);
+      padding: 100px 0;
+    }
+    .compare-table-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead tr {
+      background: rgba(255,255,255,0.03);
+    }
+    th {
+      padding: 18px 24px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    th.col-snapmaster {
+      color: var(--snap-blue);
+      background: rgba(90,200,250,0.06);
+    }
+    td {
+      padding: 15px 24px;
+      font-size: 0.875rem;
+      border-bottom: 1px solid var(--border);
+    }
+    tr:last-child td { border-bottom: none; }
+    td.col-snapmaster {
+      color: var(--snap-blue);
+      font-weight: 600;
+      background: rgba(90,200,250,0.04);
+    }
+    td.col-label {
+      color: var(--text-secondary);
+      font-size: 0.83rem;
+    }
+    .check { color: #27C93F; font-size: 1rem; }
+    .dash  { color: rgba(255,255,255,0.2); }
+
+    /* ── [6] System Requirements ──────────────────────────────── */
+    #sysreq {
+      background: var(--bg-primary);
+      padding: 80px 0;
+    }
+    .sysreq-inner {
+      text-align: center;
+    }
+    .sysreq-inner .section-sub {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 36px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 10px 20px;
+      font-size: 0.875rem;
+    }
+    .pill-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--snap-blue);
+      color: #000;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 900;
+    }
+    .pill-note {
+      margin-top: 24px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* ── [7] Download CTA ─────────────────────────────────────── */
+    #download {
+      background: var(--bg-secondary);
+      padding: 120px 0;
+    }
+    .cta-inner {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .cta-headline {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .cta-sub {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 36px;
+    }
+    .cta-micro {
+      margin-top: 14px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .cta-glow {
+      display: inline-block;
+      background: linear-gradient(135deg, #5AC8FA, #BF5AF2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── [8] Footer ───────────────────────────────────────────── */
+    footer {
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .footer-brand .logo-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: var(--snap-blue);
+      border-radius: 5px;
+      color: #000;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .footer-copy { color: var(--text-secondary); font-size: 0.82rem; }
+    .footer-links {
+      display: flex;
+      gap: 22px;
+    }
+    .footer-links a {
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      #hero { padding: 64px 0 56px; }
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .mock-screen { order: -1; }
+
+      .features-grid { grid-template-columns: 1fr; }
+
+      .nav-links a:not(.btn-primary) { display: none; }
+
+      th, td { padding: 12px 14px; font-size: 0.8rem; }
+
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .footer-links { justify-content: center; }
+
+      #features, #snapzones, #compare, #sysreq, #download { padding: 72px 0; }
+    }
+
+    @media (max-width: 480px) {
+      .pill-row { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── [1] Nav ──────────────────────────────────────────────────── -->
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="logo-icon">⊞</span>
+        SnapMaster
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="#download" class="btn-primary">Download Free</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── [2] Hero ─────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+
+      <!-- Left: Copy -->
+      <div class="fade-in">
+        <div class="hero-badge">
+          <span>✦</span> macOS 전용 윈도우 스냅
+        </div>
+        <h1 class="hero-headline-ko">
+          당신의 Mac 화면,<br>
+          <span class="snap-blue">드래그 한 번</span>으로<br>
+          완성됩니다.
+        </h1>
+        <p class="hero-headline-en">Your Mac. Your Layout. One Drag Away.</p>
+        <div class="hero-pills">
+          <span class="hero-pill">11개 스냅존</span>
+          <span class="hero-pill">단축키 지원</span>
+          <span class="hero-pill">메뉴바 상주</span>
+          <span class="hero-pill">무료</span>
+        </div>
+        <div class="hero-cta-group">
+          <a href="#download" class="btn-primary">
+            <span>↓</span> Download Free
+          </a>
+          <span class="hero-micro">macOS 13+ · Apple Silicon &amp; Intel · Developer ID Signed</span>
+        </div>
+      </div>
+
+      <!-- Right: Mock Window -->
+      <div class="fade-in" style="transition-delay:0.15s">
+        <div class="mock-screen">
+          <div class="mock-titlebar">
+            <span class="tl tl-red"></span>
+            <span class="tl tl-yellow"></span>
+            <span class="tl tl-green"></span>
+          </div>
+          <div class="mock-desktop">
+            <!-- Window 1 (top-left) -->
+            <div class="snap-win">
+              <div class="snap-win-bar">
+                <span class="snap-win-dot"></span>
+                <span class="snap-win-dot"></span>
+                <span class="snap-win-dot"></span>
+              </div>
+              <div class="snap-win-body">
+                <div class="snap-win-line w80"></div>
+                <div class="snap-win-line w60"></div>
+                <div class="snap-win-line w40"></div>
+                <div class="snap-win-line w80"></div>
+                <div class="snap-win-line w60"></div>
+              </div>
+            </div>
+            <!-- Window 2 (bottom-left) -->
+            <div class="snap-win" style="grid-row:2; grid-column:1;">
+              <div class="snap-win-bar">
+                <span class="snap-win-dot"></span>
+                <span class="snap-win-dot"></span>
+                <span class="snap-win-dot"></span>
+              </div>
+              <div class="snap-win-body">
+                <div class="snap-win-line w60"></div>
+                <div class="snap-win-line w80"></div>
+                <div class="snap-win-line w40"></div>
+              </div>
+            </div>
+            <!-- Window 3 (right, preview snapping) -->
+            <div class="snap-win snap-win-preview">
+              <div class="snap-win-bar">
+                <span class="snap-win-dot" style="background:rgba(90,200,250,0.4)"></span>
+                <span class="snap-win-dot" style="background:rgba(90,200,250,0.4)"></span>
+                <span class="snap-win-dot" style="background:rgba(90,200,250,0.4)"></span>
+              </div>
+              <div class="snap-overlay">
+                <span class="snap-overlay-label">Snapping...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── [3] Features ─────────────────────────────────────────────── -->
+<section id="features">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">강력한 스냅, 군더더기 없이</h2>
+      <p class="section-sub">
+        필요한 기능만 골라 담았습니다. 설치하면 바로 씁니다.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card fade-in" style="transition-delay:0.05s">
+        <span class="feature-icon">⊞</span>
+        <div class="feature-title">11 Snap Zones</div>
+        <p class="feature-desc">절반, 코너, 3분할, 하단 — 모든 레이아웃 커버. 어떤 작업 방식에도 딱 맞는 존이 준비되어 있습니다.</p>
+      </div>
+      <div class="feature-card fade-in" style="transition-delay:0.10s">
+        <span class="feature-icon">⌨</span>
+        <div class="feature-title">Drag or Hotkey</div>
+        <p class="feature-desc">마우스 드래그 또는 단축키, 손에 익은 방식 그대로. 두 가지 모두 지원하니 워크플로우를 바꿀 필요가 없습니다.</p>
+      </div>
+      <div class="feature-card fade-in" style="transition-delay:0.15s">
+        <span class="feature-icon">◉</span>
+        <div class="feature-title">Lives in Menu Bar</div>
+        <p class="feature-desc">Dock에 자리 차지 없음. 앱 없이 조용히 동작하며 방해하지 않습니다. 필요할 때만 메뉴바에서 꺼내 쓰세요.</p>
+      </div>
+      <div class="feature-card fade-in" style="transition-delay:0.20s">
+        <span class="feature-icon">⚙</span>
+        <div class="feature-title">Fine-tune Everything</div>
+        <p class="feature-desc">감도 슬라이더, 오버레이 색상, 앱 제외 목록 설정을 메뉴에서 바로. 별도 설정 창 열 필요 없습니다.</p>
+      </div>
+      <div class="feature-card fade-in" style="transition-delay:0.25s">
+        <span class="feature-icon">▨</span>
+        <div class="feature-title">Multi-Monitor Ready</div>
+        <p class="feature-desc">외부 디스플레이에도 동일하게 작동합니다. 모니터가 몇 개든, 모든 화면에서 일관된 스냅 경험을 제공합니다.</p>
+      </div>
+      <div class="feature-card fade-in" style="transition-delay:0.30s">
+        <span class="feature-icon">↺</span>
+        <div class="feature-title">Launch at Login</div>
+        <p class="feature-desc">Mac을 켜면 바로 준비 완료. 매번 수동으로 실행할 필요 없이, 로그인과 함께 조용히 시작됩니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── [4] Snap Zones ────────────────────────────────────────────── -->
+<section id="snapzones">
+  <div class="container">
+    <div class="fade-in" style="text-align:center; max-width:620px; margin:0 auto 48px;">
+      <div class="section-label">Snap Zones</div>
+      <h2 class="section-title">11 Ways to Arrange</h2>
+      <p class="section-sub" style="margin:0 auto;">각 존 위에 마우스를 올려 레이아웃 이름을 확인하세요.</p>
+    </div>
+
+    <div class="snapzone-diagram fade-in" style="transition-delay:0.1s">
+      <!-- Tab group selector -->
+      <div class="sz-tabs">
+        <button class="sz-tab active" data-group="halves">Halves</button>
+        <button class="sz-tab" data-group="corners">Corners</button>
+        <button class="sz-tab" data-group="thirds">Thirds</button>
+        <button class="sz-tab" data-group="topbottom">Top / Bottom</button>
+      </div>
+
+      <div class="sz-screen">
+        <div class="sz-titlebar">
+          <span class="sz-tl sz-tl-r"></span>
+          <span class="sz-tl sz-tl-y"></span>
+          <span class="sz-tl sz-tl-g"></span>
+        </div>
+        <div class="sz-desktop">
+          <div class="sz-zones" id="sz-zones-container">
+
+            <!-- Group: Halves (Left / Right) -->
+            <div class="sz-group active" data-group="halves">
+              <div class="sz-zone sz-left-half" data-label="Left Half"></div>
+              <div class="sz-zone sz-right-half" data-label="Right Half"></div>
+              <div class="sz-zone sz-center" data-label="Center (2/3)" style="grid-column:2;grid-row:1/4;"></div>
+            </div>
+
+            <!-- Group: Corners -->
+            <div class="sz-group" data-group="corners">
+              <div class="sz-zone" data-label="Top-Left Corner" style="grid-column:1/3;grid-row:1;"></div>
+              <div class="sz-zone" data-label="Top-Right Corner" style="grid-column:2/4;grid-row:1;"></div>
+              <div class="sz-zone" data-label="Bottom-Left Corner" style="grid-column:1/3;grid-row:2/4;"></div>
+              <div class="sz-zone" data-label="Bottom-Right Corner" style="grid-column:2/4;grid-row:2/4;"></div>
+            </div>
+
+            <!-- Group: Thirds -->
+            <div class="sz-group" data-group="thirds">
+              <div class="sz-zone sz-left-third" data-label="Left Third"></div>
+              <div class="sz-zone sz-middle-third" data-label="Center Third"></div>
+              <div class="sz-zone sz-right-third" data-label="Right Third"></div>
+            </div>
+
+            <!-- Group: Top / Bottom -->
+            <div class="sz-group" data-group="topbottom">
+              <div class="sz-zone sz-top-half" data-label="Top Half"></div>
+              <div class="sz-zone sz-bottom-half" data-label="Bottom Half"></div>
+              <div class="sz-zone sz-center" data-label="Maximise" style="grid-column:1/4;grid-row:2;"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <p class="sz-hint">존 위에 마우스를 올리면 이름이 표시됩니다 · 탭을 눌러 레이아웃 그룹 전환</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── [5] Comparison ────────────────────────────────────────────── -->
+<section id="compare">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Why SnapMaster</div>
+      <h2 class="section-title">다른 앱과 비교해보면</h2>
+      <p class="section-sub">더 많은 존, 더 세밀한 설정, 그리고 영원히 무료.</p>
+    </div>
+
+    <div class="compare-table-wrap fade-in" style="transition-delay:0.1s">
+      <table>
+        <thead>
+          <tr>
+            <th>기능</th>
+            <th class="col-snapmaster">SnapMaster</th>
+            <th>Magnet</th>
+            <th>Rectangle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-label">스냅존 수</td>
+            <td class="col-snapmaster"><strong>11개</strong></td>
+            <td>6개</td>
+            <td>8개</td>
+          </tr>
+          <tr>
+            <td class="col-label">가격</td>
+            <td class="col-snapmaster"><strong>무료</strong></td>
+            <td>$7.99</td>
+            <td>무료</td>
+          </tr>
+          <tr>
+            <td class="col-label">메뉴 인라인 설정</td>
+            <td class="col-snapmaster"><span class="check">✓</span></td>
+            <td><span class="dash">—</span></td>
+            <td><span class="dash">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-label">감도 슬라이더</td>
+            <td class="col-snapmaster"><span class="check">✓</span></td>
+            <td><span class="dash">—</span></td>
+            <td><span class="dash">—</span></td>
+          </tr>
+          <tr>
+            <td class="col-label">앱 제외 목록</td>
+            <td class="col-snapmaster"><span class="check">✓</span></td>
+            <td><span class="dash">—</span></td>
+            <td><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td class="col-label">멀티 모니터</td>
+            <td class="col-snapmaster"><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── [6] System Requirements ──────────────────────────────────── -->
+<section id="sysreq">
+  <div class="container">
+    <div class="sysreq-inner fade-in">
+      <div class="section-label">System Requirements</div>
+      <h2 class="section-title">호환성</h2>
+      <p class="section-sub">대부분의 Mac에서 바로 실행됩니다.</p>
+
+      <div class="pill-row">
+        <div class="pill">
+          <span class="pill-icon">✓</span>
+          macOS 13 Ventura 이상
+        </div>
+        <div class="pill">
+          <span class="pill-icon">✓</span>
+          Apple Silicon (M1 ~ M4)
+        </div>
+        <div class="pill">
+          <span class="pill-icon">✓</span>
+          Intel 64-bit Mac
+        </div>
+        <div class="pill">
+          <span class="pill-icon">⚙</span>
+          Accessibility 권한 필요
+        </div>
+      </div>
+      <p class="pill-note">
+        Accessibility 권한은 창 제어를 위한 macOS 표준 권한입니다. Magnet, Rectangle 등 동류 앱과 동일합니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── [7] Download CTA ──────────────────────────────────────────── -->
+<section id="download">
+  <div class="container">
+    <div class="cta-inner fade-in">
+      <h2 class="cta-headline">
+        Start Working <span class="cta-glow">Smarter</span> Today
+      </h2>
+      <p class="cta-sub">
+        설치하고, 드래그하고, 완성합니다.<br>그게 전부입니다.
+      </p>
+      <a href="#" class="btn-primary" style="font-size:1rem; padding:15px 34px; border-radius:12px;">
+        <span>↓</span> Download Free (v1.1)
+      </a>
+      <p class="cta-micro">설치 파일 약 3MB · 광고 없음 · 트래킹 없음 · Developer ID Signed</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── [8] Footer ────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">⊞</span>
+        SnapMaster
+        <span class="footer-copy">&copy; 2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="#">GitHub Issues</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── JavaScript ────────────────────────────────────────────────── -->
+<script>
+  /* ── Intersection Observer: fade-in on scroll ── */
+  (function () {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+  })();
+
+  /* ── Snap Zone tab switcher ── */
+  (function () {
+    const tabs = document.querySelectorAll('.sz-tab');
+    const groups = document.querySelectorAll('.sz-group');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.group;
+
+        // Update active tab
+        tabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Show matching group
+        groups.forEach((g) => {
+          if (g.dataset.group === target) {
+            g.classList.add('active');
+          } else {
+            g.classList.remove('active');
+          }
+        });
+      });
+    });
+  })();
+
+  /* ── Smooth nav active state ── */
+  (function () {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            navLinks.forEach((link) => {
+              link.style.color =
+                link.getAttribute('href') === '#' + entry.target.id
+                  ? 'var(--text-primary)'
+                  : '';
+            });
+          }
+        });
+      },
+      { rootMargin: '-50% 0px -50% 0px' }
+    );
+
+    sections.forEach((s) => io.observe(s));
+  })();
+</script>
+</body>
+</html>
