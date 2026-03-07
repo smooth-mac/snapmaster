@@ -15,19 +15,23 @@
 		4E88D2E9504F837B1650A0D7 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDDCC0463972EE4CBF15250 /* WindowController.swift */; };
 		5EF556E375F2DCD5A7EA3388 /* ShortcutsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556D228F9D17473F826FC626 /* ShortcutsWindowController.swift */; };
 		71DBB2DD159D2F4326949029 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0088BFE5359D2506D06DA75C /* Carbon.framework */; };
+		A8FC7C30FCAFAF4BEEE80FB1 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97908DCEDF4E9708FB511331 /* PreferencesWindowController.swift */; };
 		B3946A39A6C4D81DDD813D35 /* OverlayWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9042140A557269ADF852EDAE /* OverlayWindowManager.swift */; };
 		BA18890509AAC7AEF0081F46 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6D4A7DBC80D9822984B81B /* EventMonitor.swift */; };
+		C3B63802139DDBB467F187D6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B296675C182BBF34F6469EB /* AppSettings.swift */; };
 		E4DD2FFE1B89135D314B571E /* SnapZoneDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87AAE7BBDCB869FDBB8095A /* SnapZoneDetector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0088BFE5359D2506D06DA75C /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		0B296675C182BBF34F6469EB /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		13CC0EAD63877C18783970AE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		186CF5E9FC8B49EF4EAA32C9 /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 		556D228F9D17473F826FC626 /* ShortcutsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsWindowController.swift; sourceTree = "<group>"; };
 		833D88BC5E2AE255BF38676F /* HotkeyBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyBinding.swift; sourceTree = "<group>"; };
 		8B2E3E01CA2A5973AE7FE0B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9042140A557269ADF852EDAE /* OverlayWindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowManager.swift; sourceTree = "<group>"; };
+		97908DCEDF4E9708FB511331 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
 		9A6D4A7DBC80D9822984B81B /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		9B067E9B5CFD76FF4C22448E /* SnapZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapZone.swift; sourceTree = "<group>"; };
 		9FD84C570CC896DD0671A7E0 /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
@@ -60,12 +64,14 @@
 			isa = PBXGroup;
 			children = (
 				13CC0EAD63877C18783970AE /* AppDelegate.swift */,
+				0B296675C182BBF34F6469EB /* AppSettings.swift */,
 				9A6D4A7DBC80D9822984B81B /* EventMonitor.swift */,
 				833D88BC5E2AE255BF38676F /* HotkeyBinding.swift */,
 				186CF5E9FC8B49EF4EAA32C9 /* HotkeyManager.swift */,
 				8B2E3E01CA2A5973AE7FE0B4 /* Info.plist */,
 				9FD84C570CC896DD0671A7E0 /* MenuBarManager.swift */,
 				9042140A557269ADF852EDAE /* OverlayWindowManager.swift */,
+				97908DCEDF4E9708FB511331 /* PreferencesWindowController.swift */,
 				556D228F9D17473F826FC626 /* ShortcutsWindowController.swift */,
 				9B067E9B5CFD76FF4C22448E /* SnapZone.swift */,
 				C87AAE7BBDCB869FDBB8095A /* SnapZoneDetector.swift */,
@@ -151,11 +157,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E2760ECDD8A9242CE3D1CAE /* AppDelegate.swift in Sources */,
+				C3B63802139DDBB467F187D6 /* AppSettings.swift in Sources */,
 				BA18890509AAC7AEF0081F46 /* EventMonitor.swift in Sources */,
 				1013ABD9E4D0AA94681CA5C2 /* HotkeyBinding.swift in Sources */,
 				14D8AD41D86292DEF8A80069 /* HotkeyManager.swift in Sources */,
 				397911BD6D2E5E9DA63FF7FF /* MenuBarManager.swift in Sources */,
 				B3946A39A6C4D81DDD813D35 /* OverlayWindowManager.swift in Sources */,
+				A8FC7C30FCAFAF4BEEE80FB1 /* PreferencesWindowController.swift in Sources */,
 				5EF556E375F2DCD5A7EA3388 /* ShortcutsWindowController.swift in Sources */,
 				394E04C465DEA43134A929E5 /* SnapZone.swift in Sources */,
 				E4DD2FFE1B89135D314B571E /* SnapZoneDetector.swift in Sources */,
@@ -216,7 +224,7 @@
 				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.SnapMaster;
+				PRODUCT_BUNDLE_IDENTIFIER = com.smoothmac.snapmaster;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -300,7 +308,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.SnapMaster;
+				PRODUCT_BUNDLE_IDENTIFIER = com.smoothmac.snapmaster;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
