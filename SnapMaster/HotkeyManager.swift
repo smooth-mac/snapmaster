@@ -116,13 +116,14 @@ final class HotkeyManager {
     // MARK: - Snapping
 
     private func performSnap(zone: SnapZone) {
+        guard zone.isActive else { return }
         guard let window = WindowController.getFrontmostWindow() else { return }
 
         // Use the screen that contains the mouse cursor.
         let cursor = NSEvent.mouseLocation   // AppKit coords (bottom-left origin)
-        let screen = NSScreen.screens.first { NSPointInRect(cursor, $0.frame) }
-                     ?? NSScreen.main
-                     ?? NSScreen.screens[0]
+        guard let screen = NSScreen.screens.first(where: { NSPointInRect(cursor, $0.frame) })
+                           ?? NSScreen.main
+                           ?? NSScreen.screens.first else { return }
 
         let frame = zone.targetFrame(screen: screen)
         WindowController.setFrame(frame, for: window)

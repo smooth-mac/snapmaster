@@ -87,11 +87,10 @@ class WindowController {
         // Apply position first (required order for AX API)
         AXUIElementSetAttributeValue(window, kAXPositionAttribute as CFString, posValue)
 
-        // Small delay for reliability before applying size
-        Thread.sleep(forTimeInterval: 0.01)
-
-        // Apply size second
-        AXUIElementSetAttributeValue(window, kAXSizeAttribute as CFString, sizeValue)
+        // Apply size after a short delay without blocking the main thread
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            AXUIElementSetAttributeValue(window, kAXSizeAttribute as CFString, sizeValue)
+        }
     }
 
     // MARK: - Accessibility Permission

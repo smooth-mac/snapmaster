@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA1B2C3D4E5F6A7B8C9D0E1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB1B2C3D4E5F6A7B8C9D0E1F /* Assets.xcassets */; };
 		1013ABD9E4D0AA94681CA5C2 /* HotkeyBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D88BC5E2AE255BF38676F /* HotkeyBinding.swift */; };
 		14D8AD41D86292DEF8A80069 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186CF5E9FC8B49EF4EAA32C9 /* HotkeyManager.swift */; };
 		394E04C465DEA43134A929E5 /* SnapZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B067E9B5CFD76FF4C22448E /* SnapZone.swift */; };
@@ -37,6 +38,7 @@
 		9FD84C570CC896DD0671A7E0 /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
 		C87AAE7BBDCB869FDBB8095A /* SnapZoneDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapZoneDetector.swift; sourceTree = "<group>"; };
 		E409B31343675F1D174929B2 /* SnapMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB1B2C3D4E5F6A7B8C9D0E1F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EDDDCC0463972EE4CBF15250 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -51,6 +53,17 @@
 		};
 /* End PBXFrameworksBuildPhase section */
 
+/* Begin PBXResourcesBuildPhase section */
+		CC1B2C3D4E5F6A7B8C9D0E1F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA1B2C3D4E5F6A7B8C9D0E1F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXGroup section */
 		4C4CBD54C39B833AF94BEC95 /* Products */ = {
 			isa = PBXGroup;
@@ -63,6 +76,7 @@
 		6144A05D5E7E2E48DDDF9851 /* SnapMaster */ = {
 			isa = PBXGroup;
 			children = (
+				BB1B2C3D4E5F6A7B8C9D0E1F /* Assets.xcassets */,
 				13CC0EAD63877C18783970AE /* AppDelegate.swift */,
 				0B296675C182BBF34F6469EB /* AppSettings.swift */,
 				9A6D4A7DBC80D9822984B81B /* EventMonitor.swift */,
@@ -106,6 +120,7 @@
 			buildPhases = (
 				707F5DC567B60219BD2264D1 /* Sources */,
 				8E2458CF9E6C2F1DB5AD727F /* Frameworks */,
+				CC1B2C3D4E5F6A7B8C9D0E1F /* Resources */,
 			);
 			buildRules = (
 			);

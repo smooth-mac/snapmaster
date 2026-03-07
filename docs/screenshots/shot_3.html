@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=2560">
+<title>SnapMaster – Shot 3: Menu Bar Control</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 2560px;
+    height: 1600px;
+    overflow: hidden;
+    background: #0D0D12;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    color: #F5F5F7;
+  }
+
+  /* Background */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 1100px 700px at 55% 38%, rgba(90,200,250,0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 500px 500px at 10% 90%, rgba(191,90,242,0.04) 0%, transparent 60%),
+      #0D0D12;
+  }
+
+  /* ── Left copy ── */
+  .copy {
+    position: absolute;
+    left: 160px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 660px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(90,200,250,0.12);
+    border: 1px solid rgba(90,200,250,0.30);
+    border-radius: 100px;
+    padding: 10px 24px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #5AC8FA;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  h1 {
+    font-size: 96px;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 40px;
+    color: #F5F5F7;
+  }
+
+  h1 span { color: #5AC8FA; }
+
+  .subtitle {
+    font-size: 34px;
+    font-weight: 400;
+    color: #AEAEB2;
+    line-height: 1.55;
+    margin-bottom: 60px;
+  }
+
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .feat-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .feat-number {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(90,200,250,0.15);
+    border: 1px solid rgba(90,200,250,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #5AC8FA;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .feat-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .feat-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #F5F5F7;
+  }
+
+  .feat-desc {
+    font-size: 24px;
+    color: #636366;
+    font-weight: 400;
+  }
+
+  /* ── Right: macOS menu bar + dropdown ── */
+  .mockup-area {
+    position: absolute;
+    right: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1480px;
+    height: 1200px;
+  }
+
+  /* macOS screen */
+  .mac-screen {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #0F1020 0%, #09090F 100%);
+    border-radius: 26px;
+    border: 1.5px solid rgba(255,255,255,0.10);
+    box-shadow: 0 80px 200px rgba(0,0,0,0.80);
+    overflow: hidden;
+  }
+
+  /* wallpaper */
+  .wallpaper {
+    position: absolute;
+    top: 50px;
+    left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 900px 600px at 50% 50%, rgba(15,20,60,0.8) 0%, rgba(9,9,15,1) 80%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='none'/%3E%3Cline x1='0' y1='60' x2='60' y2='0' stroke='rgba(90,200,250,0.02)' stroke-width='1'/%3E%3C/svg%3E");
+  }
+
+  /* Menu bar */
+  .menubar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50px;
+    background: rgba(22,22,26,0.96);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 22px;
+    backdrop-filter: blur(20px);
+    z-index: 100;
+  }
+
+  .mb-left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mb-item {
+    font-size: 16px;
+    color: rgba(255,255,255,0.78);
+    padding: 4px 9px;
+    border-radius: 5px;
+  }
+  .mb-item.bold { font-weight: 700; }
+
+  .mb-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* SnapMaster icon (active / highlighted) */
+  .snap-icon-wrap {
+    position: relative;
+    padding: 5px 8px;
+    border-radius: 7px;
+    background: rgba(90,200,250,0.18);
+    border: 1px solid rgba(90,200,250,0.40);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .snap-icon-grid {
+    width: 26px;
+    height: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .si-cell { background: rgba(255,255,255,0.45); border-radius: 2px; }
+  .si-cell.on { background: #5AC8FA; }
+
+  .mb-time {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.80);
+  }
+
+  /* ── Dropdown Menu ── */
+  .dropdown {
+    position: absolute;
+    top: 58px;
+    right: 100px;
+    width: 420px;
+    background: rgba(28,28,36,0.98);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    box-shadow:
+      0 30px 80px rgba(0,0,0,0.70),
+      0 0 0 0.5px rgba(255,255,255,0.06),
+      0 2px 4px rgba(0,0,0,0.40);
+    overflow: hidden;
+    backdrop-filter: blur(40px);
+    z-index: 200;
+  }
+
+  /* Header of dropdown */
+  .dd-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .dd-app-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #0F1020 0%, #1E2240 100%);
+    border: 1px solid rgba(90,200,250,0.25);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 3px;
+    padding: 8px;
+  }
+
+  .ddi-cell { background: rgba(255,255,255,0.30); border-radius: 2px; }
+  .ddi-cell.on {
+    background: #5AC8FA;
+    box-shadow: 0 0 4px rgba(90,200,250,0.60);
+  }
+
+  .dd-app-info { display: flex; flex-direction: column; gap: 2px; }
+  .dd-app-name { font-size: 17px; font-weight: 700; color: #F5F5F7; }
+  .dd-app-status {
+    font-size: 13px;
+    color: #30D158;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #30D158;
+  }
+
+  /* Divider */
+  .dd-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+    margin: 0;
+  }
+
+  /* Menu section title */
+  .dd-section {
+    padding: 10px 20px 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Menu row */
+  .dd-row {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: default;
+    border-radius: 8px;
+    margin: 1px 6px;
+  }
+
+  .dd-row:hover, .dd-row.hovered {
+    background: rgba(90,200,250,0.12);
+  }
+
+  .dd-row-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: #F5F5F7;
+    font-weight: 400;
+  }
+
+  .dd-row-icon {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.60;
+  }
+
+  .dd-row-icon svg {
+    width: 16px; height: 16px;
+    fill: none;
+    stroke: #F5F5F7;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+  .dd-row-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dd-value {
+    font-size: 13px;
+    color: rgba(255,255,255,0.38);
+  }
+
+  .dd-arrow {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: rgba(255,255,255,0.30);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Toggle switch */
+  .toggle {
+    width: 40px;
+    height: 24px;
+    border-radius: 12px;
+    background: #30D158;
+    position: relative;
+  }
+
+  .toggle.off { background: rgba(255,255,255,0.15); }
+
+  .toggle-knob {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.30);
+  }
+
+  .toggle.off .toggle-knob { right: auto; left: 3px; }
+
+  /* Sensitivity slider row */
+  .slider-row {
+    padding: 8px 20px 12px;
+    margin: 1px 6px;
+  }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 8px;
+  }
+
+  .slider-track {
+    width: 100%;
+    height: 5px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .slider-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 62%;
+    background: #5AC8FA;
+    border-radius: 3px;
+  }
+
+  .slider-thumb {
+    position: absolute;
+    top: 50%;
+    left: 62%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.40);
+    border: 2px solid #5AC8FA;
+  }
+
+  /* Submenu arrow indicator */
+  .submenu-indicator {
+    position: absolute;
+    top: 58px;
+    right: 528px;
+    width: 340px;
+    background: rgba(28,28,36,0.98);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.60);
+    overflow: hidden;
+    backdrop-filter: blur(40px);
+    z-index: 210;
+  }
+
+  .sub-header {
+    padding: 10px 16px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .sub-row {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #F5F5F7;
+    margin: 1px 4px;
+    border-radius: 7px;
+  }
+
+  .sub-row.selected {
+    background: rgba(90,200,250,0.14);
+    color: #5AC8FA;
+  }
+
+  .sub-row.selected::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #5AC8FA;
+    box-shadow: 0 0 6px #5AC8FA;
+  }
+
+  /* Callout annotations */
+  .callout {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 300;
+  }
+
+  .callout-line {
+    height: 1.5px;
+    background: rgba(90,200,250,0.40);
+  }
+
+  .callout-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #5AC8FA;
+    box-shadow: 0 0 8px #5AC8FA;
+    flex-shrink: 0;
+  }
+
+  .callout-label {
+    font-size: 22px;
+    font-weight: 600;
+    color: #5AC8FA;
+    white-space: nowrap;
+  }
+
+  /* Shot badge */
+  .shot-badge {
+    position: absolute;
+    bottom: 60px;
+    left: 160px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 26px;
+    color: #636366;
+    font-weight: 500;
+  }
+  .shot-badge-line { width: 48px; height: 2px; background: #636366; }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<!-- Left copy -->
+<div class="copy">
+  <div class="eyebrow">Menu Bar</div>
+
+  <h1>Control<br>Everything<br>from the<br><span>Menu Bar.</span></h1>
+
+  <p class="subtitle">
+    One click away.<br>
+    No app switching required.
+  </p>
+
+  <div class="feature-list">
+    <div class="feat-item">
+      <div class="feat-number">1</div>
+      <div class="feat-text">
+        <span class="feat-title">Live toggle</span>
+        <span class="feat-desc">Enable / disable snapping instantly</span>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-number">2</div>
+      <div class="feat-text">
+        <span class="feat-title">Sensitivity slider</span>
+        <span class="feat-desc">Adjust snap threshold in real time</span>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-number">3</div>
+      <div class="feat-text">
+        <span class="feat-title">Zone picker</span>
+        <span class="feat-desc">Toggle individual zones on or off</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- macOS screen mockup -->
+<div class="mockup-area">
+  <div class="mac-screen">
+
+    <!-- Wallpaper -->
+    <div class="wallpaper"></div>
+
+    <!-- Menu bar -->
+    <div class="menubar">
+      <div class="mb-left">
+        <span style="font-size:20px; margin-right:6px; color:rgba(255,255,255,0.85);">&#63743;</span>
+        <span class="mb-item bold">Finder</span>
+        <span class="mb-item">File</span>
+        <span class="mb-item">Edit</span>
+        <span class="mb-item">View</span>
+        <span class="mb-item">Window</span>
+      </div>
+      <div class="mb-right">
+        <!-- SnapMaster icon (highlighted) -->
+        <div class="snap-icon-wrap">
+          <div class="snap-icon-grid">
+            <div class="si-cell on"></div>
+            <div class="si-cell"></div>
+            <div class="si-cell"></div>
+            <div class="si-cell"></div>
+            <div class="si-cell"></div>
+            <div class="si-cell"></div>
+          </div>
+        </div>
+        <span style="font-size:15px; color:rgba(255,255,255,0.55);">Wifi</span>
+        <span style="font-size:15px; color:rgba(255,255,255,0.55);">Batt</span>
+        <span class="mb-time">10:42</span>
+      </div>
+    </div>
+
+    <!-- Main Dropdown -->
+    <div class="dropdown">
+
+      <!-- App header -->
+      <div class="dd-header">
+        <div class="dd-app-icon">
+          <div class="ddi-cell on"></div>
+          <div class="ddi-cell"></div>
+          <div class="ddi-cell"></div>
+          <div class="ddi-cell"></div>
+          <div class="ddi-cell"></div>
+          <div class="ddi-cell"></div>
+        </div>
+        <div class="dd-app-info">
+          <span class="dd-app-name">SnapMaster</span>
+          <span class="dd-app-status">
+            <span class="status-dot"></span>
+            Active — Snapping enabled
+          </span>
+        </div>
+      </div>
+
+      <!-- Enable toggle -->
+      <div class="dd-section">Window Snapping</div>
+      <div class="dd-row hovered">
+        <div class="dd-row-left">
+          <div class="dd-row-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+          </div>
+          Enable Snapping
+        </div>
+        <div class="toggle">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+
+      <!-- Sensitivity -->
+      <div class="slider-row">
+        <div class="slider-label">
+          <span>Sensitivity</span>
+          <span style="color:#5AC8FA; font-weight:600;">Medium</span>
+        </div>
+        <div class="slider-track">
+          <div class="slider-fill"></div>
+          <div class="slider-thumb"></div>
+        </div>
+        <div class="slider-label" style="margin-top:6px; margin-bottom:0;">
+          <span>Low</span>
+          <span>High</span>
+        </div>
+      </div>
+
+      <div class="dd-divider"></div>
+
+      <!-- Snap Zones submenu -->
+      <div class="dd-section">Zones</div>
+      <div class="dd-row" style="position:relative;">
+        <div class="dd-row-left">
+          <div class="dd-row-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
+          </div>
+          Snap Zones
+        </div>
+        <div class="dd-row-right">
+          <span class="dd-value">11 active</span>
+          <svg class="dd-arrow" viewBox="0 0 16 16"><polyline points="6,4 10,8 6,12"/></svg>
+        </div>
+      </div>
+
+      <!-- Excluded Apps -->
+      <div class="dd-row">
+        <div class="dd-row-left">
+          <div class="dd-row-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/></svg>
+          </div>
+          Excluded Apps
+        </div>
+        <div class="dd-row-right">
+          <span class="dd-value">2 apps</span>
+          <svg class="dd-arrow" viewBox="0 0 16 16"><polyline points="6,4 10,8 6,12"/></svg>
+        </div>
+      </div>
+
+      <div class="dd-divider"></div>
+
+      <!-- Preferences -->
+      <div class="dd-row">
+        <div class="dd-row-left">
+          <div class="dd-row-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          </div>
+          Preferences...
+        </div>
+        <div class="dd-row-right">
+          <span class="dd-value" style="font-size:12px;">&#8984;,</span>
+        </div>
+      </div>
+
+      <!-- Quit -->
+      <div class="dd-row" style="margin-bottom:6px;">
+        <div class="dd-row-left" style="color: rgba(255,255,255,0.45);">
+          <div class="dd-row-icon" style="opacity:0.40;">
+            <svg viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 11-12.73 0M12 2v10"/></svg>
+          </div>
+          Quit SnapMaster
+        </div>
+        <div class="dd-row-right">
+          <span class="dd-value" style="font-size:12px;">&#8984;Q</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Snap Zones submenu (floating) -->
+    <div class="submenu-indicator">
+      <div class="sub-header">Snap Zones</div>
+      <div class="sub-row selected">Left Half</div>
+      <div class="sub-row selected">Right Half</div>
+      <div class="sub-row selected">Top Left</div>
+      <div class="sub-row selected">Top Right</div>
+      <div class="sub-row selected">Bottom Left</div>
+      <div class="sub-row selected">Bottom Right</div>
+      <div class="sub-row selected">Left Third</div>
+      <div class="sub-row selected">Center Third</div>
+      <div class="sub-row selected">Right Third</div>
+      <div class="sub-row selected">Maximize</div>
+      <div class="sub-row selected">Center Float</div>
+    </div>
+
+  </div><!-- /mac-screen -->
+</div><!-- /mockup-area -->
+
+<!-- Shot badge -->
+<div class="shot-badge">
+  <div class="shot-badge-line"></div>
+  03 / 05
+</div>
+
+</body>
+</html>

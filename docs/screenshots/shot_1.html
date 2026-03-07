@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=2560">
+<title>SnapMaster – Shot 1: Hero</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 2560px;
+    height: 1600px;
+    overflow: hidden;
+    background: #0D0D12;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    color: #F5F5F7;
+  }
+
+  /* ── Background ── */
+  .bg-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 1200px 800px at 70% 50%, rgba(90,200,250,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 600px 600px at 15% 80%, rgba(191,90,242,0.05) 0%, transparent 60%),
+      #0D0D12;
+  }
+
+  /* subtle grid texture */
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(90,200,250,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(90,200,250,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 2200px 1200px at 65% 50%, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 2200px 1200px at 65% 50%, black 30%, transparent 80%);
+  }
+
+  /* ── Left copy panel ── */
+  .copy {
+    position: absolute;
+    left: 160px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 680px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(90,200,250,0.12);
+    border: 1px solid rgba(90,200,250,0.30);
+    border-radius: 100px;
+    padding: 10px 24px;
+    font-size: 28px;
+    font-weight: 600;
+    color: #5AC8FA;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .eyebrow-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #5AC8FA;
+    box-shadow: 0 0 8px #5AC8FA;
+  }
+
+  h1 {
+    font-size: 108px;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 44px;
+    color: #F5F5F7;
+  }
+
+  h1 span {
+    color: #5AC8FA;
+  }
+
+  .subtitle {
+    font-size: 36px;
+    font-weight: 400;
+    color: #AEAEB2;
+    line-height: 1.5;
+    margin-bottom: 64px;
+    max-width: 580px;
+  }
+
+  /* feature pills */
+  .pills {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 30px;
+    font-weight: 500;
+    color: #F5F5F7;
+  }
+
+  .pill-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(90,200,250,0.15);
+    border: 1px solid rgba(90,200,250,0.30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .pill-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: #5AC8FA;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ── macOS screen mockup ── */
+  .screen-wrap {
+    position: absolute;
+    right: -60px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1560px;
+    height: 1180px;
+  }
+
+  /* macOS window chrome */
+  .mac-screen {
+    position: absolute;
+    inset: 0;
+    background: #1C1C1E;
+    border-radius: 28px;
+    border: 1.5px solid rgba(255,255,255,0.10);
+    box-shadow:
+      0 80px 200px rgba(0,0,0,0.80),
+      0 0 0 1px rgba(255,255,255,0.05) inset;
+    overflow: hidden;
+  }
+
+  /* menubar */
+  .menubar {
+    height: 52px;
+    background: rgba(28,28,30,0.95);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 20px;
+    backdrop-filter: blur(20px);
+    position: relative;
+    z-index: 10;
+  }
+
+  .apple-logo {
+    font-size: 22px;
+    color: rgba(255,255,255,0.85);
+    margin-right: 4px;
+  }
+
+  .menu-items {
+    display: flex;
+    gap: 4px;
+  }
+
+  .menu-item {
+    font-size: 17px;
+    color: rgba(255,255,255,0.80);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  .menu-item.bold { font-weight: 700; }
+
+  .menubar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* SnapMaster menu bar icon */
+  .snap-menubar-icon {
+    width: 28px;
+    height: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2.5px;
+  }
+
+  .snap-cell {
+    background: rgba(255,255,255,0.50);
+    border-radius: 2px;
+  }
+
+  .snap-cell.active {
+    background: #5AC8FA;
+  }
+
+  .menubar-time {
+    font-size: 17px;
+    color: rgba(255,255,255,0.80);
+    font-weight: 500;
+  }
+
+  /* desktop area */
+  .desktop {
+    position: absolute;
+    top: 52px;
+    left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 1000px 700px at 60% 40%, rgba(15,16,32,1) 0%, rgba(9,9,15,1) 100%);
+    overflow: hidden;
+  }
+
+  /* wallpaper grid lines */
+  .desktop::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(90,200,250,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(90,200,250,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* ── App windows ── */
+  .app-window {
+    position: absolute;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.60);
+  }
+
+  .win-titlebar {
+    height: 38px;
+    background: rgba(44,44,46,0.95);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .traffic-lights {
+    display: flex;
+    gap: 7px;
+  }
+
+  .tl {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+  }
+
+  .tl-red   { background: #FF5F57; }
+  .tl-yellow{ background: #FEBC2E; }
+  .tl-green { background: #28C840; }
+
+  .win-title-text {
+    margin-left: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* Window LEFT HALF — code editor */
+  .win-left {
+    left: 24px;
+    top: 28px;
+    width: 640px;
+    height: 870px;
+    background: #1E1E1E;
+  }
+
+  .code-content {
+    padding: 20px 24px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .code-line { display: flex; gap: 16px; }
+  .ln { color: #404040; min-width: 28px; text-align: right; user-select: none; }
+  .kw  { color: #C586C0; }
+  .fn  { color: #DCDCAA; }
+  .str { color: #CE9178; }
+  .cm  { color: #6A9955; }
+  .num { color: #B5CEA8; }
+  .typ { color: #4EC9B0; }
+  .op  { color: #D4D4D4; }
+  .ident { color: #9CDCFE; }
+  .plain { color: #D4D4D4; }
+
+  /* Window CENTER — browser */
+  .win-center {
+    left: 688px;
+    top: 28px;
+    width: 560px;
+    height: 870px;
+    background: #FAFAFA;
+  }
+
+  .browser-urlbar {
+    height: 42px;
+    background: #F2F2F7;
+    border-bottom: 1px solid #E0E0E0;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .url-field {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    font-size: 13px;
+    color: #333;
+    border: 1px solid #D0D0D0;
+  }
+
+  .browser-body {
+    padding: 20px;
+    background: #FAFAFA;
+  }
+
+  .browser-hero-img {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .browser-hero-text {
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .browser-article-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .bar { height: 14px; background: #E5E5EA; border-radius: 4px; }
+
+  /* Window RIGHT — finder (SNAP PREVIEW OVERLAY) */
+  .win-right {
+    left: 1272px;
+    top: 28px;
+    width: 220px;
+    height: 870px;
+    background: #2C2C2E;
+  }
+
+  /* SNAP ACTIVE ZONE OVERLAY */
+  .snap-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  /* Blue preview zone — right third */
+  .snap-preview-zone {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    background: rgba(90,200,250,0.18);
+    border: 2.5px solid #5AC8FA;
+    border-radius: 10px;
+    box-shadow:
+      0 0 0 1px rgba(90,200,250,0.15),
+      inset 0 0 40px rgba(90,200,250,0.10);
+  }
+
+  .snap-preview-zone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(90,200,250,0.12) 0%, rgba(90,200,250,0.04) 100%);
+  }
+
+  /* zone label */
+  .snap-zone-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #5AC8FA;
+    color: #09090F;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    z-index: 60;
+  }
+
+  /* sidebar content in finder window */
+  .sidebar {
+    width: 100%;
+    background: rgba(36,36,38,1);
+    height: 100%;
+    padding: 16px 0;
+  }
+
+  .sidebar-section {
+    padding: 8px 14px 4px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.30);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .sidebar-item {
+    padding: 7px 14px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.70);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sidebar-item.selected {
+    background: rgba(90,200,250,0.15);
+    color: #5AC8FA;
+  }
+
+  /* ── Snap cursor indicator ── */
+  .drag-cursor {
+    position: absolute;
+    top: 420px;
+    left: 1200px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    z-index: 100;
+  }
+
+  .drag-cursor::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: -20px; right: -20px; bottom: -20px;
+    border-radius: 50%;
+    border: 2px solid rgba(90,200,250,0.4);
+    animation: pulse 1.5s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    0%   { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  /* ── Screenshot badge ── */
+  .shot-badge {
+    position: absolute;
+    bottom: 60px;
+    left: 160px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 26px;
+    color: #636366;
+    font-weight: 500;
+  }
+
+  .shot-badge-line {
+    width: 48px;
+    height: 2px;
+    background: #636366;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-grid"></div>
+
+<!-- ── LEFT COPY ── -->
+<div class="copy">
+  <div class="eyebrow">
+    <span class="eyebrow-dot"></span>
+    SnapMaster for macOS
+  </div>
+
+  <h1>Snap Any<br>Window.<br><span>Instantly.</span></h1>
+
+  <p class="subtitle">
+    Drag to the edge. Release.<br>
+    Your layout snaps into place.
+  </p>
+
+  <div class="pills">
+    <div class="pill">
+      <div class="pill-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </div>
+      11 Snap Zones
+    </div>
+    <div class="pill">
+      <div class="pill-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/><path d="M12 7v10M2 7l10 5 10-5"/></svg>
+      </div>
+      Drag-to-snap + Hotkeys
+    </div>
+    <div class="pill">
+      <div class="pill-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </div>
+      Zero performance impact
+    </div>
+  </div>
+</div>
+
+<!-- ── SCREEN MOCKUP ── -->
+<div class="screen-wrap">
+  <div class="mac-screen">
+
+    <!-- Menu Bar -->
+    <div class="menubar">
+      <span class="apple-logo">&#63743;</span>
+      <div class="menu-items">
+        <span class="menu-item bold">Finder</span>
+        <span class="menu-item">File</span>
+        <span class="menu-item">Edit</span>
+        <span class="menu-item">View</span>
+        <span class="menu-item">Window</span>
+        <span class="menu-item">Help</span>
+      </div>
+      <div class="menubar-right">
+        <!-- SnapMaster icon -->
+        <div class="snap-menubar-icon">
+          <div class="snap-cell active"></div>
+          <div class="snap-cell"></div>
+          <div class="snap-cell"></div>
+          <div class="snap-cell"></div>
+          <div class="snap-cell"></div>
+          <div class="snap-cell"></div>
+        </div>
+        <span class="menubar-time">10:42</span>
+      </div>
+    </div>
+
+    <!-- Desktop -->
+    <div class="desktop">
+
+      <!-- Window 1: Code Editor (left half) -->
+      <div class="app-window win-left">
+        <div class="win-titlebar">
+          <div class="traffic-lights">
+            <div class="tl tl-red"></div>
+            <div class="tl tl-yellow"></div>
+            <div class="tl tl-green"></div>
+          </div>
+          <span class="win-title-text">main.swift — SnapMaster</span>
+        </div>
+        <div class="code-content">
+          <div class="code-line"><span class="ln">1</span><span class="cm">// SnapMaster – Window Manager</span></div>
+          <div class="code-line"><span class="ln">2</span><span class="kw">import</span> <span class="typ">AppKit</span></div>
+          <div class="code-line"><span class="ln">3</span></div>
+          <div class="code-line"><span class="ln">4</span><span class="kw">class</span> <span class="typ">SnapEngine</span><span class="op">: </span><span class="typ">NSObject</span> <span class="op">{</span></div>
+          <div class="code-line"><span class="ln">5</span></div>
+          <div class="code-line"><span class="ln">6</span>&nbsp;&nbsp;<span class="kw">private var</span> <span class="ident">sensitivity</span><span class="op">: </span><span class="typ">CGFloat</span> <span class="op">=</span> <span class="num">0.3</span></div>
+          <div class="code-line"><span class="ln">7</span>&nbsp;&nbsp;<span class="kw">private var</span> <span class="ident">zones</span><span class="op">: [</span><span class="typ">SnapZone</span><span class="op">] =</span> <span class="op">[]</span></div>
+          <div class="code-line"><span class="ln">8</span></div>
+          <div class="code-line"><span class="ln">9</span>&nbsp;&nbsp;<span class="fn">func</span> <span class="fn">detectZone</span><span class="op">(</span><span class="ident">at</span> <span class="ident">point</span><span class="op">:</span> <span class="typ">CGPoint</span><span class="op">)</span> <span class="op">-></span> <span class="typ">SnapZone</span><span class="op">? {</span></div>
+          <div class="code-line"><span class="ln">10</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">guard let</span> <span class="ident">screen</span> <span class="op">=</span> <span class="typ">NSScreen</span><span class="op">.</span><span class="fn">main</span> <span class="kw">else</span> <span class="op">{</span></div>
+          <div class="code-line"><span class="ln">11</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return nil</span></div>
+          <div class="code-line"><span class="ln">12</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">}</span></div>
+          <div class="code-line"><span class="ln">13</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">screen</span><span class="op">.</span><span class="ident">visibleFrame</span></div>
+          <div class="code-line"><span class="ln">14</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">let</span> <span class="ident">threshold</span> <span class="op">=</span> <span class="ident">frame</span><span class="op">.</span><span class="ident">width</span> <span class="op">*</span> <span class="ident">sensitivity</span></div>
+          <div class="code-line"><span class="ln">15</span></div>
+          <div class="code-line"><span class="ln">16</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">for</span> <span class="ident">zone</span> <span class="kw">in</span> <span class="ident">zones</span> <span class="op">{</span></div>
+          <div class="code-line"><span class="ln">17</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> <span class="ident">zone</span><span class="op">.</span><span class="ident">hitArea</span><span class="op">.</span><span class="fn">contains</span><span class="op">(</span><span class="ident">point</span><span class="op">) {</span></div>
+          <div class="code-line"><span class="ln">18</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="ident">zone</span></div>
+          <div class="code-line"><span class="ln">19</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">}</span></div>
+          <div class="code-line"><span class="ln">20</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">}</span></div>
+          <div class="code-line"><span class="ln">21</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return nil</span></div>
+          <div class="code-line"><span class="ln">22</span>&nbsp;&nbsp;<span class="op">}</span></div>
+          <div class="code-line"><span class="ln">23</span><span class="op">}</span></div>
+          <div class="code-line"><span class="ln">24</span></div>
+          <div class="code-line"><span class="ln">25</span><span class="kw">enum</span> <span class="typ">SnapZone</span><span class="op">: </span><span class="typ">CaseIterable</span> <span class="op">{</span></div>
+          <div class="code-line"><span class="ln">26</span>&nbsp;&nbsp;<span class="kw">case</span> <span class="ident">leftHalf</span><span class="op">,</span> <span class="ident">rightHalf</span></div>
+          <div class="code-line"><span class="ln">27</span>&nbsp;&nbsp;<span class="kw">case</span> <span class="ident">topLeft</span><span class="op">,</span> <span class="ident">topRight</span></div>
+          <div class="code-line"><span class="ln">28</span>&nbsp;&nbsp;<span class="kw">case</span> <span class="ident">bottomLeft</span><span class="op">,</span> <span class="ident">bottomRight</span></div>
+          <div class="code-line"><span class="ln">29</span>&nbsp;&nbsp;<span class="kw">case</span> <span class="ident">leftThird</span><span class="op">,</span> <span class="ident">centerThird</span><span class="op">,</span> <span class="ident">rightThird</span></div>
+          <div class="code-line"><span class="ln">30</span>&nbsp;&nbsp;<span class="kw">case</span> <span class="ident">maximize</span><span class="op">,</span> <span class="ident">center</span></div>
+          <div class="code-line"><span class="ln">31</span><span class="op">}</span></div>
+        </div>
+      </div>
+
+      <!-- Window 2: Browser (center) -->
+      <div class="app-window win-center">
+        <div class="win-titlebar" style="background: rgba(242,242,247,0.95); border-bottom: 1px solid rgba(0,0,0,0.08);">
+          <div class="traffic-lights">
+            <div class="tl tl-red"></div>
+            <div class="tl tl-yellow"></div>
+            <div class="tl tl-green"></div>
+          </div>
+          <div class="browser-urlbar" style="flex:1; height:28px; margin-left:8px; background:#E5E5EA; border-radius:7px; display:flex; align-items:center; padding:0 10px; font-size:13px; color:#666;">
+            github.com/snapmaster
+          </div>
+        </div>
+        <div class="browser-body">
+          <div class="browser-hero-img">
+            <span class="browser-hero-text">SnapMaster</span>
+          </div>
+          <div style="height:14px;background:#E5E5EA;border-radius:4px;margin-bottom:10px;width:70%"></div>
+          <div style="height:14px;background:#E5E5EA;border-radius:4px;margin-bottom:10px;"></div>
+          <div style="height:14px;background:#E5E5EA;border-radius:4px;margin-bottom:10px;width:85%"></div>
+          <div style="height:14px;background:#E5E5EA;border-radius:4px;margin-bottom:10px;width:60%"></div>
+          <div style="height:1px;background:#E0E0E0;margin:20px 0;"></div>
+          <div style="height:14px;background:#E5E5EA;border-radius:4px;margin-bottom:10px;"></div>
+          <div style="height:14px;background:#E5E5EA;border-radius:4px;margin-bottom:10px;width:90%"></div>
+          <div style="height:14px;background:#E5E5EA;border-radius:4px;margin-bottom:10px;width:75%"></div>
+          <div style="height:14px;background:#E5E5EA;border-radius:4px;margin-bottom:10px;width:55%"></div>
+        </div>
+      </div>
+
+      <!-- Window 3: Finder Sidebar (right — SNAP PREVIEW) -->
+      <div class="app-window win-right" style="position:absolute; left:1272px; top:28px; width:220px; height:870px; background:#2C2C2E;">
+        <div class="win-titlebar">
+          <div class="traffic-lights">
+            <div class="tl tl-red"></div>
+            <div class="tl tl-yellow"></div>
+            <div class="tl tl-green"></div>
+          </div>
+          <span class="win-title-text">Finder</span>
+        </div>
+        <div class="sidebar">
+          <div class="sidebar-section">Favourites</div>
+          <div class="sidebar-item selected">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            Home
+          </div>
+          <div class="sidebar-item">
+            <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+            Documents
+          </div>
+          <div class="sidebar-item">
+            <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            Desktop
+          </div>
+          <div class="sidebar-item">Downloads</div>
+          <div class="sidebar-item">Applications</div>
+          <div class="sidebar-section" style="margin-top:12px;">Locations</div>
+          <div class="sidebar-item">MacBook Pro</div>
+          <div class="sidebar-item">iCloud Drive</div>
+        </div>
+        <!-- SNAP OVERLAY on right window -->
+        <div class="snap-overlay">
+          <div class="snap-preview-zone"></div>
+          <div class="snap-zone-label">Right 1/3</div>
+        </div>
+      </div>
+
+      <!-- drag cursor indicator -->
+      <div class="drag-cursor"></div>
+
+    </div><!-- /desktop -->
+  </div><!-- /mac-screen -->
+</div><!-- /screen-wrap -->
+
+<!-- Shot indicator -->
+<div class="shot-badge">
+  <div class="shot-badge-line"></div>
+  01 / 05
+</div>
+
+</body>
+</html>

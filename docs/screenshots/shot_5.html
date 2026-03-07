@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=2560">
+<title>SnapMaster – Shot 5: Hotkeys</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 2560px;
+    height: 1600px;
+    overflow: hidden;
+    background: #0D0D12;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    color: #F5F5F7;
+  }
+
+  /* Background */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 1600px 900px at 50% 55%, rgba(48,209,88,0.05) 0%, transparent 65%),
+      radial-gradient(ellipse 700px 500px at 10% 20%, rgba(90,200,250,0.04) 0%, transparent 55%),
+      radial-gradient(ellipse 600px 400px at 90% 10%, rgba(255,159,10,0.03) 0%, transparent 55%),
+      #0D0D12;
+  }
+
+  /* ── Header ── */
+  .header {
+    position: absolute;
+    top: 110px;
+    left: 0; right: 0;
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(48,209,88,0.12);
+    border: 1px solid rgba(48,209,88,0.30);
+    border-radius: 100px;
+    padding: 10px 28px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #30D158;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 44px;
+  }
+
+  h1 {
+    font-size: 116px;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+  }
+
+  h1 span { color: #30D158; }
+
+  .subtitle {
+    font-size: 36px;
+    font-weight: 400;
+    color: #AEAEB2;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Main layout: keyboard left + list right ── */
+  .main-area {
+    position: absolute;
+    top: 480px;
+    left: 100px;
+    right: 100px;
+    bottom: 120px;
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+  }
+
+  /* ── Keyboard diagram ── */
+  .keyboard-wrap {
+    flex: 1.2;
+    position: relative;
+  }
+
+  .keyboard {
+    width: 100%;
+    background: rgba(22,24,40,0.70);
+    border: 1.5px solid rgba(255,255,255,0.10);
+    border-radius: 20px;
+    padding: 28px 28px 32px;
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.60),
+      0 0 0 1px rgba(255,255,255,0.04) inset;
+  }
+
+  .key-row {
+    display: flex;
+    gap: 7px;
+    margin-bottom: 7px;
+    justify-content: center;
+  }
+
+  .key {
+    height: 68px;
+    min-width: 68px;
+    border-radius: 9px;
+    background: rgba(40,42,60,0.90);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 3px solid rgba(0,0,0,0.40);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    position: relative;
+    padding: 0 8px;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .key-sub {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.25);
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+  }
+
+  /* Wide keys */
+  .key-1-5  { min-width: 110px; }
+  .key-2    { min-width: 136px; }
+  .key-tab  { min-width: 110px; }
+  .key-caps { min-width: 120px; }
+  .key-shift-l { min-width: 160px; }
+  .key-shift-r { min-width: 160px; }
+  .key-ctrl { min-width: 96px; }
+  .key-opt  { min-width: 88px; }
+  .key-cmd  { min-width: 112px; }
+  .key-space { min-width: 400px; }
+  .key-return { min-width: 140px; height: 68px; }
+  .key-delete { min-width: 120px; }
+  .key-fn   { min-width: 68px; }
+
+  /* Snap zone key highlight styles */
+  .key-snap-blue {
+    background: rgba(90,200,250,0.20);
+    border-color: rgba(90,200,250,0.60);
+    border-bottom-color: rgba(90,200,250,0.30);
+    color: #5AC8FA;
+    box-shadow: 0 0 14px rgba(90,200,250,0.20);
+  }
+
+  .key-snap-purple {
+    background: rgba(191,90,242,0.16);
+    border-color: rgba(191,90,242,0.50);
+    border-bottom-color: rgba(191,90,242,0.25);
+    color: #BF5AF2;
+    box-shadow: 0 0 12px rgba(191,90,242,0.18);
+  }
+
+  .key-snap-green {
+    background: rgba(48,209,88,0.14);
+    border-color: rgba(48,209,88,0.45);
+    border-bottom-color: rgba(48,209,88,0.22);
+    color: #30D158;
+    box-shadow: 0 0 12px rgba(48,209,88,0.16);
+  }
+
+  .key-snap-amber {
+    background: rgba(255,159,10,0.14);
+    border-color: rgba(255,159,10,0.45);
+    border-bottom-color: rgba(255,159,10,0.22);
+    color: #FF9F0A;
+    box-shadow: 0 0 12px rgba(255,159,10,0.16);
+  }
+
+  .key-modifier {
+    background: rgba(90,200,250,0.10);
+    border-color: rgba(90,200,250,0.30);
+    color: rgba(90,200,250,0.70);
+    font-size: 12px;
+  }
+
+  /* Modifier badge on snap keys */
+  .key-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: currentColor;
+    opacity: 0.60;
+  }
+
+  /* ── Hotkey list panel ── */
+  .hotkey-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .hotkey-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 8px;
+  }
+
+  .hg-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 0 0 8px 0;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .hk-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 9px;
+    margin: 2px 0;
+    transition: background 0.15s;
+  }
+
+  .hk-row:hover, .hk-row.hovered {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .hk-label {
+    font-size: 17px;
+    font-weight: 500;
+    color: #F5F5F7;
+  }
+
+  .hk-keys {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .k {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 30px;
+    padding: 0 8px;
+    border-radius: 6px;
+    background: rgba(40,42,60,0.90);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-bottom: 2px solid rgba(0,0,0,0.40);
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.65);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .k.blue   { background: rgba(90,200,250,0.15);  border-color: rgba(90,200,250,0.40);  color: #5AC8FA; }
+  .k.purple { background: rgba(191,90,242,0.12);  border-color: rgba(191,90,242,0.35);  color: #BF5AF2; }
+  .k.green  { background: rgba(48,209,88,0.11);   border-color: rgba(48,209,88,0.35);   color: #30D158; }
+  .k.amber  { background: rgba(255,159,10,0.11);  border-color: rgba(255,159,10,0.35);  color: #FF9F0A; }
+
+  .k-sep {
+    font-size: 12px;
+    color: rgba(255,255,255,0.20);
+    margin: 0 2px;
+  }
+
+  /* ── Arrow key cluster ── */
+  .arrow-row {
+    display: flex;
+    gap: 7px;
+    justify-content: center;
+  }
+
+  /* Color legend at bottom */
+  .legend {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 26px;
+    color: #AEAEB2;
+    font-weight: 500;
+  }
+
+  .leg-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+  }
+
+  .leg-blue   { background: rgba(90,200,250,0.30);  border: 1.5px solid #5AC8FA; }
+  .leg-purple { background: rgba(191,90,242,0.24);  border: 1.5px solid #BF5AF2; }
+  .leg-green  { background: rgba(48,209,88,0.22);   border: 1.5px solid #30D158; }
+  .leg-amber  { background: rgba(255,159,10,0.22);  border: 1.5px solid #FF9F0A; }
+
+  .leg-divider {
+    width: 1.5px;
+    height: 28px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* Shot badge */
+  .shot-badge {
+    position: absolute;
+    bottom: 60px;
+    left: 160px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 26px;
+    color: #636366;
+    font-weight: 500;
+  }
+  .shot-badge-line { width: 48px; height: 2px; background: #636366; }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<!-- Header -->
+<div class="header">
+  <div class="eyebrow">Keyboard Shortcuts</div>
+  <h1>Every Zone Has<br>a <span>Shortcut.</span></h1>
+  <p class="subtitle">Ctrl + Option + [key] — that's all you need to memorize.</p>
+</div>
+
+<!-- Main area -->
+<div class="main-area">
+
+  <!-- ── Keyboard diagram ── -->
+  <div class="keyboard-wrap">
+    <div class="keyboard">
+
+      <!-- Row 1: Fn + Numbers -->
+      <div class="key-row">
+        <div class="key key-fn" style="font-size:12px;">esc</div>
+        <div class="key" style="font-size:12px;">F1</div>
+        <div class="key" style="font-size:12px;">F2</div>
+        <div class="key" style="font-size:12px;">F3</div>
+        <div class="key" style="font-size:12px;">F4</div>
+        <div class="key" style="font-size:12px;">F5</div>
+        <div class="key" style="font-size:12px;">F6</div>
+        <div class="key" style="font-size:12px;">F7</div>
+        <div class="key" style="font-size:12px;">F8</div>
+        <div class="key" style="font-size:12px;">F9</div>
+        <div class="key" style="font-size:12px;">F10</div>
+        <div class="key" style="font-size:12px;">F11</div>
+        <div class="key" style="font-size:12px;">F12</div>
+      </div>
+
+      <!-- Row 2: Numbers -->
+      <div class="key-row">
+        <div class="key">`</div>
+        <div class="key">1</div>
+        <div class="key">2</div>
+        <div class="key">3</div>
+        <div class="key">4</div>
+        <div class="key">5</div>
+        <div class="key">6</div>
+        <div class="key">7</div>
+        <div class="key">8</div>
+        <div class="key">9</div>
+        <div class="key">0</div>
+        <div class="key">-</div>
+        <div class="key">=</div>
+        <div class="key key-delete" style="font-size:13px;">delete</div>
+      </div>
+
+      <!-- Row 3: QWERTY -->
+      <div class="key-row">
+        <div class="key key-tab" style="font-size:13px;">tab</div>
+        <div class="key">Q</div>
+        <div class="key key-snap-blue">
+          W
+          <div class="key-badge"></div>
+          <span class="key-sub">Top Half</span>
+        </div>
+        <div class="key key-snap-green">
+          E
+          <div class="key-badge"></div>
+          <span class="key-sub">L 2/3</span>
+        </div>
+        <div class="key key-snap-green">
+          R
+          <div class="key-badge"></div>
+          <span class="key-sub">R 2/3</span>
+        </div>
+        <div class="key key-snap-green">
+          T
+          <div class="key-badge"></div>
+          <span class="key-sub">C 1/3</span>
+        </div>
+        <div class="key">Y</div>
+        <div class="key key-snap-purple">
+          U
+          <div class="key-badge"></div>
+          <span class="key-sub">Top-L</span>
+        </div>
+        <div class="key key-snap-purple">
+          I
+          <div class="key-badge"></div>
+          <span class="key-sub">Top-R</span>
+        </div>
+        <div class="key">O</div>
+        <div class="key">P</div>
+        <div class="key">[</div>
+        <div class="key">]</div>
+        <div class="key key-delete" style="font-size:12px;">\</div>
+      </div>
+
+      <!-- Row 4: ASDF -->
+      <div class="key-row">
+        <div class="key key-caps" style="font-size:12px;">caps lock</div>
+        <div class="key">A</div>
+        <div class="key">S</div>
+        <div class="key key-snap-green">
+          D
+          <div class="key-badge"></div>
+          <span class="key-sub">L 1/3</span>
+        </div>
+        <div class="key key-snap-green">
+          F
+          <div class="key-badge"></div>
+          <span class="key-sub">R 1/3</span>
+        </div>
+        <div class="key key-snap-green">
+          G
+          <div class="key-badge"></div>
+          <span class="key-sub">C 1/3</span>
+        </div>
+        <div class="key">H</div>
+        <div class="key key-snap-purple">
+          J
+          <div class="key-badge"></div>
+          <span class="key-sub">Bot-L</span>
+        </div>
+        <div class="key key-snap-purple">
+          K
+          <div class="key-badge"></div>
+          <span class="key-sub">Bot-R</span>
+        </div>
+        <div class="key">L</div>
+        <div class="key">;</div>
+        <div class="key">'</div>
+        <div class="key key-return" style="font-size:13px;">return</div>
+      </div>
+
+      <!-- Row 5: ZXCV -->
+      <div class="key-row">
+        <div class="key key-shift-l" style="font-size:13px;">shift</div>
+        <div class="key">Z</div>
+        <div class="key">X</div>
+        <div class="key key-snap-amber">
+          C
+          <div class="key-badge"></div>
+          <span class="key-sub">Center</span>
+        </div>
+        <div class="key">V</div>
+        <div class="key">B</div>
+        <div class="key">N</div>
+        <div class="key">M</div>
+        <div class="key">,</div>
+        <div class="key">.</div>
+        <div class="key">/</div>
+        <div class="key key-shift-r" style="font-size:13px;">shift</div>
+      </div>
+
+      <!-- Row 6: Bottom row -->
+      <div class="key-row">
+        <div class="key key-ctrl key-modifier" style="font-size:12px;">ctrl &#8963;</div>
+        <div class="key key-opt key-modifier" style="font-size:12px;">opt &#8997;</div>
+        <div class="key key-cmd" style="font-size:13px;">&#8984; cmd</div>
+        <div class="key key-space" style="font-size:13px; color:rgba(255,255,255,0.20);"></div>
+        <div class="key key-cmd" style="font-size:13px;">&#8984; cmd</div>
+        <div class="key key-opt key-modifier" style="font-size:12px;">opt &#8997;</div>
+
+        <!-- Arrow keys -->
+        <div style="display:flex; flex-direction:column; gap:7px; margin-left:7px;">
+          <div style="display:flex; justify-content:center;">
+            <div class="key key-snap-blue" style="min-width:68px;">
+              &#8593;
+              <span class="key-sub">Top</span>
+            </div>
+          </div>
+          <div class="arrow-row">
+            <div class="key key-snap-blue">
+              &#8592;
+              <span class="key-sub">Left</span>
+            </div>
+            <div class="key key-snap-blue">
+              &#8595;
+              <span class="key-sub">Bot</span>
+            </div>
+            <div class="key key-snap-blue">
+              &#8594;
+              <span class="key-sub">Right</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /keyboard -->
+
+    <!-- Modifier legend below keyboard -->
+    <div style="margin-top:16px; display:flex; align-items:center; justify-content:center; gap:12px; font-size:18px; color:rgba(255,255,255,0.35);">
+      <span style="color:rgba(90,200,250,0.70); font-weight:700; background:rgba(90,200,250,0.10); border:1px solid rgba(90,200,250,0.25); padding:4px 14px; border-radius:6px; font-size:15px;">ctrl &#8963;</span>
+      <span>+</span>
+      <span style="color:rgba(90,200,250,0.70); font-weight:700; background:rgba(90,200,250,0.10); border:1px solid rgba(90,200,250,0.25); padding:4px 14px; border-radius:6px; font-size:15px;">opt &#8997;</span>
+      <span>+</span>
+      <span style="font-weight:600; font-size:15px;">highlighted key</span>
+    </div>
+
+  </div><!-- /keyboard-wrap -->
+
+  <!-- ── Hotkey list ── -->
+  <div class="hotkey-panel">
+
+    <!-- Halves -->
+    <div class="hotkey-group">
+      <div class="hg-title">Halves</div>
+      <div class="hk-row hovered">
+        <span class="hk-label">Left Half</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k blue">&#8592;</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Right Half</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k blue">&#8594;</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Top Half</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k blue">&#8593;</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Bottom Half</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k blue">&#8595;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quarters -->
+    <div class="hotkey-group">
+      <div class="hg-title">Quarters</div>
+      <div class="hk-row">
+        <span class="hk-label">Top Left</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k purple">U</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Top Right</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k purple">I</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Bottom Left</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k purple">J</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Bottom Right</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k purple">K</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thirds -->
+    <div class="hotkey-group">
+      <div class="hg-title">Thirds</div>
+      <div class="hk-row">
+        <span class="hk-label">Left Third</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k green">D</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Center Third</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k green">F</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Right Third</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k green">G</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Left Two Thirds</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k green">E</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full + Center -->
+    <div class="hotkey-group">
+      <div class="hg-title">Full Screen + Center</div>
+      <div class="hk-row">
+        <span class="hk-label">Maximize</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k amber">&#9166;</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Center Float</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k amber">C</span>
+        </div>
+      </div>
+      <div class="hk-row">
+        <span class="hk-label">Restore Size</span>
+        <div class="hk-keys">
+          <span class="k">&#8963;</span><span class="k-sep">+</span><span class="k">&#8997;</span><span class="k-sep">+</span><span class="k" style="background:rgba(255,255,255,0.08);">Z</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /hotkey-panel -->
+
+</div><!-- /main-area -->
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="leg-swatch leg-blue"></div>
+    Halves
+  </div>
+  <div class="leg-divider"></div>
+  <div class="legend-item">
+    <div class="leg-swatch leg-purple"></div>
+    Quarters
+  </div>
+  <div class="leg-divider"></div>
+  <div class="legend-item">
+    <div class="leg-swatch leg-green"></div>
+    Thirds
+  </div>
+  <div class="leg-divider"></div>
+  <div class="legend-item">
+    <div class="leg-swatch leg-amber"></div>
+    Full / Center
+  </div>
+</div>
+
+<!-- Shot badge -->
+<div class="shot-badge">
+  <div class="shot-badge-line"></div>
+  05 / 05
+</div>
+
+</body>
+</html>

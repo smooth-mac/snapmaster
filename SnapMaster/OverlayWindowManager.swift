@@ -55,6 +55,7 @@ final class OverlayWindowManager {
 
     private var overlayWindow: NSWindow?
     private var currentZone: SnapZone = .none
+    private var currentScreen: NSScreen?
 
     // MARK: Public Interface
 
@@ -68,11 +69,12 @@ final class OverlayWindowManager {
             hide()
             return
         }
-        guard zone != currentZone else {
+        guard zone != currentZone || screen != currentScreen else {
             return
         }
 
         currentZone = zone
+        currentScreen = screen
 
         // Compute the inset target frame (4 px breathing room on every side).
         let rawFrame    = zone.targetFrame(screen: screen)
@@ -109,6 +111,7 @@ final class OverlayWindowManager {
         overlayWindow?.orderOut(nil)
         overlayWindow?.alphaValue = 0
         currentZone = .none
+        currentScreen = nil
     }
 
     // MARK: Private Helpers

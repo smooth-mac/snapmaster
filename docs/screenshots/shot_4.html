@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=2560">
+<title>SnapMaster – Shot 4: Preferences</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 2560px;
+    height: 1600px;
+    overflow: hidden;
+    background: #0D0D12;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    color: #F5F5F7;
+  }
+
+  /* Background */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 1200px 900px at 55% 50%, rgba(191,90,242,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 800px 600px at 20% 30%, rgba(90,200,250,0.05) 0%, transparent 60%),
+      #0D0D12;
+  }
+
+  /* ── Left copy ── */
+  .copy {
+    position: absolute;
+    left: 160px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 640px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(191,90,242,0.12);
+    border: 1px solid rgba(191,90,242,0.30);
+    border-radius: 100px;
+    padding: 10px 24px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #BF5AF2;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  h1 {
+    font-size: 96px;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 40px;
+    color: #F5F5F7;
+  }
+
+  h1 span { color: #BF5AF2; }
+
+  .subtitle {
+    font-size: 34px;
+    font-weight: 400;
+    color: #AEAEB2;
+    line-height: 1.55;
+    margin-bottom: 60px;
+  }
+
+  .pref-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ph-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 28px;
+    font-weight: 500;
+    color: #F5F5F7;
+  }
+
+  .ph-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #BF5AF2;
+    box-shadow: 0 0 8px rgba(191,90,242,0.60);
+    flex-shrink: 0;
+  }
+
+  /* ── Right: Preferences window ── */
+  .mockup-area {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1500px;
+    height: 1200px;
+  }
+
+  /* macOS screen backdrop */
+  .mac-screen {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #0F1020 0%, #09090F 100%);
+    border-radius: 26px;
+    border: 1.5px solid rgba(255,255,255,0.10);
+    box-shadow: 0 80px 200px rgba(0,0,0,0.80);
+    overflow: hidden;
+  }
+
+  /* menu bar */
+  .menubar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50px;
+    background: rgba(22,22,26,0.96);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+  }
+
+  .mb-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .snap-icon-wrap {
+    padding: 5px 8px;
+    border-radius: 7px;
+    background: rgba(90,200,250,0.14);
+    border: 1px solid rgba(90,200,250,0.30);
+    display: flex;
+    align-items: center;
+  }
+
+  .snap-icon-grid {
+    width: 24px;
+    height: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .si-cell { background: rgba(255,255,255,0.40); border-radius: 2px; }
+  .si-cell.on { background: #5AC8FA; }
+
+  /* wallpaper */
+  .wallpaper {
+    position: absolute;
+    top: 50px;
+    left: 0; right: 0; bottom: 0;
+    background: rgba(9,9,15,0.9);
+  }
+
+  /* ── Preferences Window ── */
+  .prefs-window {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 980px;
+    background: rgba(26,26,30,0.99);
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.70),
+      0 0 0 0.5px rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+
+  /* Title bar */
+  .prefs-titlebar {
+    height: 52px;
+    background: rgba(36,36,40,0.99);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 0;
+    position: relative;
+  }
+
+  .traffic-lights {
+    display: flex;
+    gap: 7px;
+  }
+
+  .tl {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+  }
+
+  .tl-red    { background: #FF5F57; }
+  .tl-yellow { background: #FEBC2E; }
+  .tl-green  { background: #28C840; }
+
+  .prefs-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+  }
+
+  /* Tab bar */
+  .prefs-tabs {
+    display: flex;
+    background: rgba(20,20,24,0.99);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 0 20px;
+  }
+
+  .prefs-tab {
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.40);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    cursor: default;
+  }
+
+  .prefs-tab.active {
+    color: #5AC8FA;
+  }
+
+  .prefs-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0; right: 0;
+    height: 2px;
+    background: #5AC8FA;
+    border-radius: 2px 2px 0 0;
+  }
+
+  /* Content area */
+  .prefs-content {
+    padding: 32px 40px;
+    display: flex;
+    gap: 40px;
+  }
+
+  /* Left col */
+  .prefs-left { flex: 1; display: flex; flex-direction: column; gap: 32px; }
+
+  /* Right col */
+  .prefs-right { width: 320px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Section */
+  .pref-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .pref-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* Row */
+  .pref-row {
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .pref-row:last-child { border-bottom: none; }
+
+  .pref-row-label {
+    font-size: 15px;
+    color: #F5F5F7;
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .pref-row-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.30);
+    font-weight: 400;
+  }
+
+  /* Toggle */
+  .toggle {
+    width: 44px;
+    height: 26px;
+    border-radius: 13px;
+    background: #30D158;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .toggle.off { background: rgba(255,255,255,0.15); }
+
+  .toggle-knob {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.30);
+  }
+
+  .toggle.off .toggle-knob { right: auto; left: 3px; }
+
+  /* Segmented control */
+  .segmented {
+    display: flex;
+    background: rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 2px;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  .seg-option {
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.40);
+    cursor: default;
+  }
+
+  .seg-option.active {
+    background: rgba(90,200,250,0.20);
+    color: #5AC8FA;
+  }
+
+  /* Slider control */
+  .pref-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    color: #F5F5F7;
+    align-items: center;
+  }
+
+  .slider-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5AC8FA;
+    background: rgba(90,200,250,0.12);
+    border: 1px solid rgba(90,200,250,0.25);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  .slider-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.10);
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .slider-fill-blue { background: #5AC8FA; }
+  .slider-fill-purple { background: #BF5AF2; }
+
+  .slider-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    border-radius: 3px;
+  }
+
+  .slider-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    background: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.40);
+  }
+
+  .slider-thumb-blue { border: 2px solid #5AC8FA; }
+  .slider-thumb-purple { border: 2px solid #BF5AF2; }
+
+  .slider-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    padding: 0 2px;
+  }
+
+  /* Excluded apps list */
+  .excl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .excl-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .excl-add-btn {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5AC8FA;
+    background: rgba(90,200,250,0.12);
+    border: 1px solid rgba(90,200,250,0.25);
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: default;
+  }
+
+  .excl-list {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .excl-item {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .excl-item:last-child { border-bottom: none; }
+
+  .excl-app-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .excl-app-name { font-size: 14px; color: #F5F5F7; font-weight: 500; flex: 1; }
+  .excl-app-bundle { font-size: 11px; color: rgba(255,255,255,0.28); }
+
+  .excl-remove {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: rgba(255,59,48,0.18);
+    border: 1px solid rgba(255,59,48,0.30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #FF3B30;
+    cursor: default;
+    flex-shrink: 0;
+  }
+
+  /* Launch at login checkbox style */
+  .pref-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    background: rgba(90,200,250,0.20);
+    border: 1.5px solid #5AC8FA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .pref-check svg {
+    width: 11px; height: 11px;
+    fill: none;
+    stroke: #5AC8FA;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pref-check.off {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  /* Shot badge */
+  .shot-badge {
+    position: absolute;
+    bottom: 60px;
+    left: 160px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 26px;
+    color: #636366;
+    font-weight: 500;
+  }
+  .shot-badge-line { width: 48px; height: 2px; background: #636366; }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<!-- Left copy -->
+<div class="copy">
+  <div class="eyebrow">Preferences</div>
+
+  <h1>Fine-tune<br>to Your<br><span>Workflow.</span></h1>
+
+  <p class="subtitle">
+    Granular control without<br>
+    the complexity.
+  </p>
+
+  <div class="pref-highlights">
+    <div class="ph-item">
+      <div class="ph-dot"></div>
+      Snap sensitivity per screen
+    </div>
+    <div class="ph-item">
+      <div class="ph-dot"></div>
+      Exclude specific apps
+    </div>
+    <div class="ph-item">
+      <div class="ph-dot"></div>
+      Launch at login
+    </div>
+    <div class="ph-item">
+      <div class="ph-dot"></div>
+      Snap preview animation
+    </div>
+    <div class="ph-item">
+      <div class="ph-dot"></div>
+      Multi-monitor aware
+    </div>
+  </div>
+</div>
+
+<!-- macOS screen mockup -->
+<div class="mockup-area">
+  <div class="mac-screen">
+
+    <!-- Menu bar -->
+    <div class="menubar">
+      <span style="font-size:19px; color:rgba(255,255,255,0.85); margin-right:14px;">&#63743;</span>
+      <span style="font-size:15px; color:rgba(255,255,255,0.70); font-weight:700; margin-right:8px;">SnapMaster</span>
+      <span style="font-size:15px; color:rgba(255,255,255,0.55);">Preferences</span>
+      <div class="mb-right">
+        <div class="snap-icon-wrap">
+          <div class="snap-icon-grid">
+            <div class="si-cell on"></div>
+            <div class="si-cell"></div>
+            <div class="si-cell"></div>
+            <div class="si-cell"></div>
+            <div class="si-cell"></div>
+            <div class="si-cell"></div>
+          </div>
+        </div>
+        <span style="font-size:15px; color:rgba(255,255,255,0.55);">10:42</span>
+      </div>
+    </div>
+
+    <!-- Wallpaper -->
+    <div class="wallpaper"></div>
+
+    <!-- Preferences Window -->
+    <div class="prefs-window">
+
+      <!-- Title bar -->
+      <div class="prefs-titlebar">
+        <div class="traffic-lights">
+          <div class="tl tl-red"></div>
+          <div class="tl tl-yellow"></div>
+          <div class="tl tl-green"></div>
+        </div>
+        <span class="prefs-title">SnapMaster Preferences</span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="prefs-tabs">
+        <div class="prefs-tab active">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+          General
+        </div>
+        <div class="prefs-tab">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+          Snap Zones
+        </div>
+        <div class="prefs-tab">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 3a3 3 0 00-3 3v12a3 3 0 003 3 3 3 0 003-3 3 3 0 00-3-3H6a3 3 0 00-3 3 3 3 0 003 3 3 3 0 003-3V6a3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3h12a3 3 0 003-3 3 3 0 00-3-3z"/></svg>
+          Shortcuts
+        </div>
+        <div class="prefs-tab">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Displays
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="prefs-content">
+
+        <!-- Left column -->
+        <div class="prefs-left">
+
+          <!-- Behavior section -->
+          <div class="pref-section">
+            <div class="pref-section-title">Behavior</div>
+
+            <div class="pref-row">
+              <div class="pref-row-label">
+                Enable Window Snapping
+                <span class="pref-row-desc">Detect drag-to-edge gestures</span>
+              </div>
+              <div class="toggle">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+
+            <div class="pref-row">
+              <div class="pref-row-label">
+                Launch at Login
+                <span class="pref-row-desc">Start SnapMaster when you log in</span>
+              </div>
+              <div class="pref-check">
+                <svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+              </div>
+            </div>
+
+            <div class="pref-row">
+              <div class="pref-row-label">
+                Show Preview While Dragging
+                <span class="pref-row-desc">Blue zone overlay on drag</span>
+              </div>
+              <div class="toggle">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+
+            <div class="pref-row">
+              <div class="pref-row-label">
+                Snap Animation
+                <span class="pref-row-desc">Animate windows into position</span>
+              </div>
+              <div class="segmented">
+                <div class="seg-option">Off</div>
+                <div class="seg-option active">Normal</div>
+                <div class="seg-option">Fast</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Sensitivity section -->
+          <div class="pref-section">
+            <div class="pref-section-title">Sensitivity</div>
+
+            <div class="pref-slider">
+              <div class="slider-header">
+                <span>Snap Threshold</span>
+                <span class="slider-val">Medium</span>
+              </div>
+              <div class="slider-track">
+                <div class="slider-fill slider-fill-blue" style="width: 55%;"></div>
+                <div class="slider-thumb slider-thumb-blue" style="left: 55%;"></div>
+              </div>
+              <div class="slider-ticks">
+                <span>Low</span>
+                <span>Medium</span>
+                <span>High</span>
+              </div>
+            </div>
+
+            <div class="pref-slider">
+              <div class="slider-header">
+                <span>Preview Opacity</span>
+                <span class="slider-val" style="color:#BF5AF2; background:rgba(191,90,242,0.12); border-color:rgba(191,90,242,0.25);">70%</span>
+              </div>
+              <div class="slider-track">
+                <div class="slider-fill slider-fill-purple" style="width: 70%;"></div>
+                <div class="slider-thumb slider-thumb-purple" style="left: 70%;"></div>
+              </div>
+              <div class="slider-ticks">
+                <span>10%</span>
+                <span>50%</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Right column: Excluded Apps -->
+        <div class="prefs-right">
+
+          <div class="excl-header">
+            <span class="excl-title">Excluded Apps</span>
+            <span class="excl-add-btn">+ Add App</span>
+          </div>
+
+          <div class="excl-list">
+            <div class="excl-item">
+              <div class="excl-app-icon" style="background:linear-gradient(135deg,#0071E3,#007AFF);">
+                <svg width="16" height="16" fill="white" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+              </div>
+              <div style="flex:1;">
+                <div class="excl-app-name">Zoom</div>
+                <div class="excl-app-bundle">us.zoom.xos</div>
+              </div>
+              <div class="excl-remove">&#215;</div>
+            </div>
+            <div class="excl-item">
+              <div class="excl-app-icon" style="background:linear-gradient(135deg,#7B2FBE,#A855F7);">
+                <svg width="16" height="16" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l4 4"/></svg>
+              </div>
+              <div style="flex:1;">
+                <div class="excl-app-name">Final Cut Pro</div>
+                <div class="excl-app-bundle">com.apple.FinalCut</div>
+              </div>
+              <div class="excl-remove">&#215;</div>
+            </div>
+            <div class="excl-item" style="background:rgba(255,255,255,0.02);">
+              <div class="excl-app-icon" style="background:rgba(255,255,255,0.06); border:1px dashed rgba(255,255,255,0.15);">
+                <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.30)" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </div>
+              <div style="flex:1;">
+                <div class="excl-app-name" style="color:rgba(255,255,255,0.28);">Add application...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- About section -->
+          <div style="margin-top:16px; padding:18px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:10px;">
+            <div style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.25); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:12px;">About</div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; justify-content:space-between; font-size:13px;">
+                <span style="color:rgba(255,255,255,0.40);">Version</span>
+                <span style="color:#F5F5F7; font-weight:600;">1.0.0</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13px;">
+                <span style="color:rgba(255,255,255,0.40);">License</span>
+                <span style="color:#30D158; font-weight:600;">Active</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13px;">
+                <span style="color:rgba(255,255,255,0.40);">Update</span>
+                <span style="color:#5AC8FA; font-weight:600;">Up to date</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /prefs-content -->
+
+    </div><!-- /prefs-window -->
+
+  </div><!-- /mac-screen -->
+</div><!-- /mockup-area -->
+
+<!-- Shot badge -->
+<div class="shot-badge">
+  <div class="shot-badge-line"></div>
+  04 / 05
+</div>
+
+</body>
+</html>
