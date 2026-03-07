@@ -26,9 +26,7 @@
 	<true/>
 	<key>NSAccessibilityUsageDescription</key>
 	<string>SnapMaster requires Accessibility access to move and resize windows belonging to other applications. This is the only permission the app requests.</string>
-	<key>NSAppleEventsUsageDescription</key>
-	<string>SnapMaster needs Accessibility access to detect window drags and resize windows.</string>
-	<key>NSPrincipalClass</key>
+<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
 </plist>
