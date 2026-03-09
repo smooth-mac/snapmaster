@@ -37,7 +37,7 @@
 		9B067E9B5CFD76FF4C22448E /* SnapZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapZone.swift; sourceTree = "<group>"; };
 		9FD84C570CC896DD0671A7E0 /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
 		C87AAE7BBDCB869FDBB8095A /* SnapZoneDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapZoneDetector.swift; sourceTree = "<group>"; };
-		E409B31343675F1D174929B2 /* SnapMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E409B31343675F1D174929B2 /* SmoothSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmoothSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB1B2C3D4E5F6A7B8C9D0E1F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EDDDCC0463972EE4CBF15250 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -68,7 +68,7 @@
 		4C4CBD54C39B833AF94BEC95 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E409B31343675F1D174929B2 /* SnapMaster.app */,
+				E409B31343675F1D174929B2 /* SmoothSnap.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -114,9 +114,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		73F48EFD54FF61F0173B05FB /* SnapMaster */ = {
+		73F48EFD54FF61F0173B05FB /* SmoothSnap */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5D13C70F4A7799B6AD694F88 /* Build configuration list for PBXNativeTarget "SnapMaster" */;
+			buildConfigurationList = 5D13C70F4A7799B6AD694F88 /* Build configuration list for PBXNativeTarget "SmoothSnap" */;
 			buildPhases = (
 				707F5DC567B60219BD2264D1 /* Sources */,
 				8E2458CF9E6C2F1DB5AD727F /* Frameworks */,
@@ -126,11 +126,11 @@
 			);
 			dependencies = (
 			);
-			name = SnapMaster;
+			name = SmoothSnap;
 			packageProductDependencies = (
 			);
-			productName = SnapMaster;
-			productReference = E409B31343675F1D174929B2 /* SnapMaster.app */;
+			productName = SmoothSnap;
+			productReference = E409B31343675F1D174929B2 /* SmoothSnap.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -161,7 +161,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				73F48EFD54FF61F0173B05FB /* SnapMaster */,
+				73F48EFD54FF61F0173B05FB /* SmoothSnap */,
 			);
 		};
 /* End PBXProject section */
@@ -355,7 +355,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5D13C70F4A7799B6AD694F88 /* Build configuration list for PBXNativeTarget "SnapMaster" */ = {
+		5D13C70F4A7799B6AD694F88 /* Build configuration list for PBXNativeTarget "SmoothSnap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				29E540693FD06223C64128EB /* Debug */,
