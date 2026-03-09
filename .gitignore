@@ -1,5 +1,9 @@
-# Claude Code internal files
-.claude/
+# Claude Code internal files (local state — not shared)
+# Use glob (*) not trailing slash so negation of subdirs works
+.claude/*
+!.claude/agents
+.claude/agents/*
+!.claude/agents/*.md
 
 # Xcode
 *.xcuserstate
