@@ -104,7 +104,7 @@ SmoothSnap requires Accessibility permission to move and resize windows belongin
 ## 제출 전 필수 확인 사항
 
 - [x] CGEventTap → NSEvent 글로벌 모니터 교체 (샌드박스 호환 완료)
-- [x] Bundle ID 확정: com.smoothmac.snapmaster
+- [x] Bundle ID 확정: com.smoothmac.smoothsnap
 - [x] SKU 확정: SNAPMASTER-001
 - [x] Support URL: https://smoothmac.app/support.html
 - [x] Privacy Policy URL: https://smoothmac.app/privacy.html
