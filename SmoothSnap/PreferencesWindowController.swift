@@ -2,7 +2,7 @@ import AppKit
 
 // MARK: - PreferencesWindowController
 
-/// A singleton `NSWindowController` that hosts the SnapMaster Preferences UI.
+/// A singleton `NSWindowController` that hosts the SmoothSnap Preferences UI.
 ///
 /// Layout is built entirely in code — no XIB or Storyboard required.
 /// All slider changes are written to `AppSettings.shared` immediately so that

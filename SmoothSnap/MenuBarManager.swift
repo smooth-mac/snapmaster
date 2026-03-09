@@ -1,10 +1,9 @@
 import AppKit
-import ServiceManagement
 
 /// Manages the NSStatusItem that lives in the macOS menu bar.
 ///
 /// Responsibilities:
-/// - Display the SnapMaster icon in the status bar, reflecting enabled/disabled state.
+/// - Display the SmoothSnap icon in the status bar, reflecting enabled/disabled state.
 /// - Provide a quick-access menu for toggling snapping, adjusting sensitivity,
 ///   enabling/disabling individual snap zone groups, and launching preferences.
 /// - Notify the rest of the app via `onToggle` whenever `isEnabled` changes.
@@ -122,14 +121,14 @@ final class MenuBarManager: NSObject {
         guard let button = statusItem.button else { return }
 
         let symbolName = "square.split.2x2.fill"
-        if let sfImage = NSImage(systemSymbolName: symbolName, accessibilityDescription: "SnapMaster") {
+        if let sfImage = NSImage(systemSymbolName: symbolName, accessibilityDescription: "SmoothSnap") {
             sfImage.isTemplate = true
             button.image       = sfImage
         } else {
             button.title = "⊞"
         }
 
-        button.toolTip = "SnapMaster"
+        button.toolTip = "SmoothSnap"
         statusItem.menu = menu
     }
 
@@ -166,8 +165,8 @@ final class MenuBarManager: NSObject {
     }
 
     private func headerTitle() -> String {
-        let statusLabel = isEnabled ? "활성 중" : "일시정지"
-        return "SnapMaster  ·  \(statusLabel)"
+        let statusLabel = isEnabled ? "Active" : "Paused"
+        return "SmoothSnap  ·  \(statusLabel)"
     }
 
     private func updateHeader() {
@@ -322,7 +321,7 @@ final class MenuBarManager: NSObject {
 
     private func buildQuitSection() {
         let quitItem = NSMenuItem(
-            title: "Quit SnapMaster",
+            title: "Quit SmoothSnap",
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )

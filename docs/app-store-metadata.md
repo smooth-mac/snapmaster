@@ -108,7 +108,10 @@ SmoothSnap requires Accessibility permission to move and resize windows belongin
 - [x] SKU 확정: SNAPMASTER-001
 - [x] Support URL: https://smoothmac.app/support.html
 - [x] Privacy Policy URL: https://smoothmac.app/privacy.html
-- [ ] Apple Developer Program 등록 ($99/년)
-- [ ] App Store Connect 앱 등록 (Bundle ID 입력)
-- [ ] 스크린샷 캡처 1280x800 또는 1440x900 최소 1장
-- [ ] 가격 티어 설정 및 D+60 변경 일정 등록
+- [x] 스크린샷 5장 완료 (2560x1600 — Mac App Store 허용 사이즈)
+- [x] DEVELOPMENT_TEAM: 9K2LBNXSNU (project.yml 설정 완료)
+- [x] App Sandbox + Accessibility 임시예외 entitlements 설정 완료
+- [x] 코드 정리 완료 (SnapMaster 잔재 제거, debug print 제거, unused import 제거)
+- [ ] Apple Developer Program 등록 ($99/년) — 브라우저에서 직접 진행
+- [ ] App Store Connect 앱 등록 (Bundle ID 입력) — Developer 등록 후 진행
+- [ ] 가격 티어 설정 및 D+60 변경 일정 등록 — App Store Connect에서 직접 설정

@@ -3,9 +3,9 @@ import ServiceManagement
 
 // MARK: - AppSettings
 
-/// A type-safe, UserDefaults-backed store for all SnapMaster user preferences.
+/// A type-safe, UserDefaults-backed store for all SmoothSnap user preferences.
 ///
-/// All keys are prefixed with `"snapmaster."` to avoid collisions with other
+/// All keys are prefixed with `"smoothsnap."` to avoid collisions with other
 /// frameworks or future system keys. Call `AppSettings.shared` from any thread;
 /// `UserDefaults` itself is thread-safe for individual reads and writes.
 ///
@@ -22,12 +22,12 @@ final class AppSettings {
     // MARK: - UserDefaults Keys
 
     private enum Key {
-        static let edgeThreshold    = "snapmaster.edgeThreshold"
-        static let cornerThreshold  = "snapmaster.cornerThreshold"
-        static let overlayOpacity   = "snapmaster.overlayOpacity"
-        static let excludedBundleIDs = "snapmaster.excludedBundleIDs"
-        static let launchAtLogin    = "snapmaster.launchAtLogin"
-        static let disabledZones    = "snapmaster.disabledZones"
+        static let edgeThreshold    = "smoothsnap.edgeThreshold"
+        static let cornerThreshold  = "smoothsnap.cornerThreshold"
+        static let overlayOpacity   = "smoothsnap.overlayOpacity"
+        static let excludedBundleIDs = "smoothsnap.excludedBundleIDs"
+        static let launchAtLogin    = "smoothsnap.launchAtLogin"
+        static let disabledZones    = "smoothsnap.disabledZones"
     }
 
     // MARK: - Default Values
@@ -134,7 +134,7 @@ final class AppSettings {
 
     // MARK: - Launch at Login
 
-    /// Whether SnapMaster is registered to launch at login via `SMAppService`.
+    /// Whether SmoothSnap is registered to launch at login via `SMAppService`.
     ///
     /// Setting this to `true` calls `SMAppService.mainApp.register()`;
     /// setting it to `false` calls `unregister(completionHandler:)`.

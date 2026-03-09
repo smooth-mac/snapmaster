@@ -1,0 +1,380 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04563F3FC866224EDB591C92 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CD7F3FA30A50DAE4B44459 /* EventMonitor.swift */; };
+		1306CB0234E4CC6FB93EB28C /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE73B7F03D7F5BD798439ECD /* PreferencesWindowController.swift */; };
+		1CEE426EED0108CBED8FB798 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B95C8D260E8FD7516C26FE59 /* HotkeyManager.swift */; };
+		2D0BDDCAD253C0424A20DBD6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6019517888D5E0C5B18E1F18 /* AppSettings.swift */; };
+		2E063EDAB3C74C648A2F0DE4 /* SnapZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E2BE22B21A1141C4AFBB0C /* SnapZone.swift */; };
+		35A827CAF8738A8CBC38701A /* HotkeyBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08369303A6C25128B883B783 /* HotkeyBinding.swift */; };
+		42082F875A8DDDBBD7A31580 /* SnapZoneDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679470EE4BA08B73AEF072A5 /* SnapZoneDetector.swift */; };
+		4C52F239B0BA82DD404ECBB5 /* ShortcutsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B21EA2EA70868A3FB0A6EA1 /* ShortcutsWindowController.swift */; };
+		5EDB4760F1364D0BA6AE2706 /* OverlayWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D6325641D2EF287F38600B /* OverlayWindowManager.swift */; };
+		8923DBA3C4AE1700C3833DAC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F5F2C5BE54F0AF87B9EAFA /* AppDelegate.swift */; };
+		A30910A6BB0AD551F10D5FE8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30D8515E70EB226072BCD68A /* Assets.xcassets */; };
+		ED021BC64147DD1BC8620A6A /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADE56281B5A62EE032A6191 /* WindowController.swift */; };
+		ED5FB85F5BC8E903B60F92F1 /* MenuBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F82E6173974FE4DECFECA0B /* MenuBarManager.swift */; };
+		F03C22C6ED60BC322AD5008B /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0213C1892AB70D9FCD1D705D /* Carbon.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0213C1892AB70D9FCD1D705D /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		08369303A6C25128B883B783 /* HotkeyBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyBinding.swift; sourceTree = "<group>"; };
+		0A134E33073BB917AF4FADE2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		20F5F2C5BE54F0AF87B9EAFA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		30D8515E70EB226072BCD68A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		52E2BE22B21A1141C4AFBB0C /* SnapZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapZone.swift; sourceTree = "<group>"; };
+		5B21EA2EA70868A3FB0A6EA1 /* ShortcutsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsWindowController.swift; sourceTree = "<group>"; };
+		6019517888D5E0C5B18E1F18 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		679470EE4BA08B73AEF072A5 /* SnapZoneDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapZoneDetector.swift; sourceTree = "<group>"; };
+		8F82E6173974FE4DECFECA0B /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
+		B4CD7F3FA30A50DAE4B44459 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
+		B95C8D260E8FD7516C26FE59 /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
+		BE73B7F03D7F5BD798439ECD /* PreferencesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
+		D9D198BDF98490832940B5B0 /* SmoothSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmoothSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D6325641D2EF287F38600B /* OverlayWindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowManager.swift; sourceTree = "<group>"; };
+		FADE56281B5A62EE032A6191 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3834134911891253C3A162EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F03C22C6ED60BC322AD5008B /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4573D3640DE0EBA7B6FF838B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D9D198BDF98490832940B5B0 /* SmoothSnap.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8128610046362736C862FA9C /* SmoothSnap */ = {
+			isa = PBXGroup;
+			children = (
+				20F5F2C5BE54F0AF87B9EAFA /* AppDelegate.swift */,
+				6019517888D5E0C5B18E1F18 /* AppSettings.swift */,
+				30D8515E70EB226072BCD68A /* Assets.xcassets */,
+				B4CD7F3FA30A50DAE4B44459 /* EventMonitor.swift */,
+				08369303A6C25128B883B783 /* HotkeyBinding.swift */,
+				B95C8D260E8FD7516C26FE59 /* HotkeyManager.swift */,
+				0A134E33073BB917AF4FADE2 /* Info.plist */,
+				8F82E6173974FE4DECFECA0B /* MenuBarManager.swift */,
+				F1D6325641D2EF287F38600B /* OverlayWindowManager.swift */,
+				BE73B7F03D7F5BD798439ECD /* PreferencesWindowController.swift */,
+				5B21EA2EA70868A3FB0A6EA1 /* ShortcutsWindowController.swift */,
+				52E2BE22B21A1141C4AFBB0C /* SnapZone.swift */,
+				679470EE4BA08B73AEF072A5 /* SnapZoneDetector.swift */,
+				FADE56281B5A62EE032A6191 /* WindowController.swift */,
+			);
+			path = SmoothSnap;
+			sourceTree = "<group>";
+		};
+		8901372976C286B7FA341C5A = {
+			isa = PBXGroup;
+			children = (
+				8128610046362736C862FA9C /* SmoothSnap */,
+				F2EF57A1AA41697888068BFE /* Frameworks */,
+				4573D3640DE0EBA7B6FF838B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F2EF57A1AA41697888068BFE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0213C1892AB70D9FCD1D705D /* Carbon.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ED2D8494D2C3AABA1A6F2693 /* SmoothSnap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58AB52C82C381BF37EC8A501 /* Build configuration list for PBXNativeTarget "SmoothSnap" */;
+			buildPhases = (
+				797C93904064605A50A8D06E /* Sources */,
+				5EAF48C646B5C77F0645FEA2 /* Resources */,
+				3834134911891253C3A162EE /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SmoothSnap;
+			packageProductDependencies = (
+			);
+			productName = SmoothSnap;
+			productReference = D9D198BDF98490832940B5B0 /* SmoothSnap.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FAE8556296CC037F3760DFEC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					ED2D8494D2C3AABA1A6F2693 = {
+						DevelopmentTeam = 9K2LBNXSNU;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = C3291FCA63F076AE622FF507 /* Build configuration list for PBXProject "SmoothSnap" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 8901372976C286B7FA341C5A;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4573D3640DE0EBA7B6FF838B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ED2D8494D2C3AABA1A6F2693 /* SmoothSnap */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5EAF48C646B5C77F0645FEA2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A30910A6BB0AD551F10D5FE8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		797C93904064605A50A8D06E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8923DBA3C4AE1700C3833DAC /* AppDelegate.swift in Sources */,
+				2D0BDDCAD253C0424A20DBD6 /* AppSettings.swift in Sources */,
+				04563F3FC866224EDB591C92 /* EventMonitor.swift in Sources */,
+				35A827CAF8738A8CBC38701A /* HotkeyBinding.swift in Sources */,
+				1CEE426EED0108CBED8FB798 /* HotkeyManager.swift in Sources */,
+				ED5FB85F5BC8E903B60F92F1 /* MenuBarManager.swift in Sources */,
+				5EDB4760F1364D0BA6AE2706 /* OverlayWindowManager.swift in Sources */,
+				1306CB0234E4CC6FB93EB28C /* PreferencesWindowController.swift in Sources */,
+				4C52F239B0BA82DD404ECBB5 /* ShortcutsWindowController.swift in Sources */,
+				2E063EDAB3C74C648A2F0DE4 /* SnapZone.swift in Sources */,
+				42082F875A8DDDBBD7A31580 /* SnapZoneDetector.swift in Sources */,
+				ED021BC64147DD1BC8620A6A /* WindowController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0628102BE9BCD8BFB0FF14F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.smoothmac.smoothsnap;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		50D2E51D49F6F6645D98E2DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SmoothSnap/SmoothSnap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 9K2LBNXSNU;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = SmoothSnap/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		ED8F5D4406902EAB1B165883 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.smoothmac.smoothsnap;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		FF3D81AB9D07C22D95807516 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SmoothSnap/SmoothSnap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 9K2LBNXSNU;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = SmoothSnap/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		58AB52C82C381BF37EC8A501 /* Build configuration list for PBXNativeTarget "SmoothSnap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50D2E51D49F6F6645D98E2DE /* Debug */,
+				FF3D81AB9D07C22D95807516 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C3291FCA63F076AE622FF507 /* Build configuration list for PBXProject "SmoothSnap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0628102BE9BCD8BFB0FF14F2 /* Debug */,
+				ED8F5D4406902EAB1B165883 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FAE8556296CC037F3760DFEC /* Project object */;
+}

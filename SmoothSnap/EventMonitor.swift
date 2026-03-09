@@ -51,7 +51,6 @@ final class EventMonitor {
         mouseUpMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { [weak self] event in
             self?.handleMouseUp(event)
         }
-        print("[EventMonitor] Started (NSEvent global monitors)")
     }
 
     func stop() {
@@ -61,7 +60,6 @@ final class EventMonitor {
         mouseDownMonitor = nil
         mouseDragMonitor = nil
         mouseUpMonitor   = nil
-        print("[EventMonitor] Stopped")
     }
 
     // MARK: - Excluded-app guard

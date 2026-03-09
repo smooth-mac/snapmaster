@@ -1,5 +1,4 @@
 import AppKit
-import ServiceManagement
 
 @main
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -90,9 +89,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let alert = NSAlert()
         alert.messageText = "Accessibility Permission Required"
         alert.informativeText = """
-            SnapMaster needs Accessibility access to detect and move windows.
+            SmoothSnap needs Accessibility access to detect and move windows.
 
-            Click "Open Settings" to grant permission, then restart SnapMaster.
+            Click "Open Settings" to grant permission, then restart SmoothSnap.
             """
         alert.addButton(withTitle: "Open Settings")
         alert.addButton(withTitle: "Later")
@@ -123,14 +122,10 @@ extension AppDelegate: EventMonitorDelegate {
             showAccessibilityAlert()
             return
         }
-        guard let window = WindowController.getFrontmostWindow() else {
-            print("[AppDelegate] No frontmost window to snap")
-            return
-        }
+        guard let window = WindowController.getFrontmostWindow() else { return }
 
         let targetFrame = zone.targetFrame(screen: screen)
         WindowController.setFrame(targetFrame, for: window)
-        print("[AppDelegate] Drag-snapped to \(zone.displayName) → \(targetFrame)")
     }
 
     func eventMonitorDidCancelSnap(_ monitor: EventMonitor) {

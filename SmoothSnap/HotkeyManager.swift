@@ -128,7 +128,6 @@ final class HotkeyManager {
         let frame = zone.targetFrame(screen: screen)
         WindowController.setFrame(frame, for: window)
 
-        print("[HotkeyManager] Snapped '\(zone.displayName)' on \(screen.localizedName)")
     }
 
     // MARK: - Registration Helpers

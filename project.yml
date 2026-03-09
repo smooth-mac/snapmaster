@@ -1,6 +1,6 @@
-name: SnapMaster
+name: SmoothSnap
 options:
-  bundleIdPrefix: com.yourname
+  bundleIdPrefix: com.smoothmac
   deploymentTarget:
     macOS: "13.0"
   defaultConfig: Debug
@@ -8,28 +8,28 @@ options:
 settings:
   SWIFT_VERSION: "5.9"
   MACOSX_DEPLOYMENT_TARGET: "13.0"
-  PRODUCT_BUNDLE_IDENTIFIER: com.yourname.SnapMaster
+  PRODUCT_BUNDLE_IDENTIFIER: com.smoothmac.smoothsnap
   MARKETING_VERSION: "1.0.0"
   CURRENT_PROJECT_VERSION: "1"
 
 targets:
-  SnapMaster:
+  SmoothSnap:
     type: application
     platform: macOS
     sources:
-      - path: SnapMaster
+      - path: SmoothSnap
         excludes:
           - "**/*.entitlements"
     info:
-      path: SnapMaster/Info.plist
+      path: SmoothSnap/Info.plist
       properties:
         LSUIElement: true                          # hide from Dock — menu bar only
         LSMinimumSystemVersion: "13.0"
         NSPrincipalClass: NSApplication
-        CFBundleDisplayName: SnapMaster
-        NSAppleEventsUsageDescription: "SnapMaster needs Accessibility access to detect window drags and resize windows."
+        CFBundleDisplayName: SmoothSnap
+        NSAppleEventsUsageDescription: "SmoothSnap needs Accessibility access to detect window drags and resize windows."
     entitlements:
-      path: SnapMaster/SnapMaster.entitlements
+      path: SmoothSnap/SmoothSnap.entitlements
       properties:
         com.apple.security.app-sandbox: true
         # Required for AXUIElement window frame manipulation in sandbox.
@@ -39,11 +39,12 @@ targets:
       - sdk: Carbon.framework
     settings:
       CODE_SIGN_STYLE: Automatic
+      DEVELOPMENT_TEAM: 9K2LBNXSNU
       # Sandbox enabled — required for Mac App Store distribution
       # NSEvent global monitors work within the sandbox.
       # AXUIElement window control requires the accessibility temporary exception
-      # entitlement (see SnapMaster.entitlements).
+      # entitlement (see SmoothSnap.entitlements).
       ENABLE_APP_SANDBOX: YES
       # Hardened runtime for notarization
       ENABLE_HARDENED_RUNTIME: YES
-      INFOPLIST_FILE: SnapMaster/Info.plist
+      INFOPLIST_FILE: SmoothSnap/Info.plist
