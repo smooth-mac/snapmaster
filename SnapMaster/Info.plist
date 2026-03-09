@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>SnapMaster</string>
+	<string>SmoothSnap</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -25,7 +25,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAccessibilityUsageDescription</key>
-	<string>SnapMaster requires Accessibility access to move and resize windows belonging to other applications. This is the only permission the app requests.</string>
+	<string>SmoothSnap requires Accessibility access to move and resize windows belonging to other applications. This is the only permission the app requests.</string>
 <key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

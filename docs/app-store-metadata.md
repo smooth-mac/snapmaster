@@ -1,4 +1,4 @@
-# SnapMaster Mac App Store 메타데이터 기록
+# SmoothSnap Mac App Store 메타데이터 기록
 
 ## 작성일: 2026-03-07
 ## 상태: URL 확정 완료 / 스크린샷 + Apple Developer 등록 대기
@@ -9,7 +9,7 @@
 
 | 필드 | 내용 | 문자 수 |
 |---|---|---|
-| App Name | SnapMaster | 10 / 30 |
+| App Name | SmoothSnap | 10 / 30 |
 | Subtitle | Window Manager for Power Users | 30 / 30 |
 
 Subtitle 대안 (A/B 테스트용):
@@ -33,7 +33,7 @@ window manager,window snap,screen layout,productivity,multitasking,resize window
 문자 수: 99 / 100자
 
 제외 원칙:
-- 앱 이름("SnapMaster") 중복 금지
+- 앱 이름("SmoothSnap") 중복 금지
 - 경쟁 앱명(Magnet, Moom, BetterSnapTool, Rectangle) 기재 금지
 - "free", "best", "top" 등 허위/주관적 표현 금지
 
@@ -42,7 +42,7 @@ window manager,window snap,screen layout,productivity,multitasking,resize window
 ## What's New (v1.0 최초 출시용)
 
 ```
-SnapMaster is here. Snap any window to 11 zones by drag or shortcut. Built for Mac power users.
+SmoothSnap is here. Snap any window to 11 zones by drag or shortcut. Built for Mac power users.
 ```
 
 문자 수: 92 / 100자
@@ -96,7 +96,7 @@ HTTPS: Let's Encrypt 인증서 자동 발급 (활성화 완료 예정)
 ## 심사 메모 (App Review Notes)
 
 ```
-SnapMaster requires Accessibility permission to move and resize windows belonging to other applications. This is the only permission the app requests. The permission is granted by the user via System Settings > Privacy & Security > Accessibility and is not requested via an in-app popup on first launch.
+SmoothSnap requires Accessibility permission to move and resize windows belonging to other applications. This is the only permission the app requests. The permission is granted by the user via System Settings > Privacy & Security > Accessibility and is not requested via an in-app popup on first launch.
 ```
 
 ---
